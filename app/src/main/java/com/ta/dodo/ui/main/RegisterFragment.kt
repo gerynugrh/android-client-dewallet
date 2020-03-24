@@ -6,24 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.ta.dodo.R
+import com.ta.dodo.databinding.RegisterFragmentBinding
 
-class MainFragment : Fragment() {
+class RegisterFragment : Fragment() {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = RegisterFragment()
     }
 
-    private lateinit var viewModel: MainViewModel
+    private val registerViewModel: RegisterViewModel by lazy {
+        ViewModelProvider(this).get(RegisterViewModel::class.java)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.main_fragment, container, false)
+        val binding = RegisterFragmentBinding.inflate(inflater).apply {
+            viewModel = registerViewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         // TODO: Use the ViewModel
     }
 
