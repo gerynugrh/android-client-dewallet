@@ -1,26 +1,36 @@
 package com.ta.dodo.ui.main
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import mu.KotlinLogging
+import com.ta.dodo.model.wallet.Wallet
 import kotlinx.coroutines.*
-import org.stellar.sdk.KeyPair
+import mu.KotlinLogging
 
-class RegisterViewModel : ViewModel() {
-    private val logger = KotlinLogging.logger {}
+private val logger = KotlinLogging.logger {}
 
-    var keyPair: MutableLiveData<KeyPair> = MutableLiveData()
+class RegisterViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = getApplication<Application>().applicationContext
+
+    var wallet: MutableLiveData<Wallet> = MutableLiveData()
+    var username: MutableLiveData<String> = MutableLiveData("")
     var isGeneratingKey: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    fun loadSavedPrivateKey() {
+        val wallet = Wallet.load(context)
+    }
 
     fun register() {
         GlobalScope.launch (Dispatchers.Main) {
             isGeneratingKey.value = true
-            val keyPair = KeyPair.random()
+            val wallet = Wallet(username.value ?: "")
 
-            logger.info { "Public key ${keyPair.accountId}" }
-            logger.info { "Seed ${keyPair.secretSeed}" }
+            wallet.register()
+            wallet.save(context)
 
-            this@RegisterViewModel.keyPair.value = keyPair
+            logger.info { "Finished generating key" }
+
+            this@RegisterViewModel.wallet.value = wallet
             isGeneratingKey.value = false
         }
     }

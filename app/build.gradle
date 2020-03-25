@@ -12,6 +12,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
         versionCode 1
+        multiDexEnabled true
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -42,10 +43,14 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     // Stellar dependencies
     implementation 'com.github.stellar:java-stellar-sdk:0.14.0'
 
     // Logger
+    implementation 'org.slf4j:slf4j-simple:1.7.29'
     implementation 'io.github.microutils:kotlin-logging:1.7.9'
+
+    implementation 'com.google.android.material:material:1.1.0'
 }

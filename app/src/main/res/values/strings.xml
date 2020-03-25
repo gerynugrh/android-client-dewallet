@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Dodo Wallet</string>
     <string name="button_register">Register</string>
+    <string name="uangsaku_saku">Saku</string>
+    <string name="uangsaku_uang">Uang</string>
+    <string name="hint_username">Username</string>
 </resources>
