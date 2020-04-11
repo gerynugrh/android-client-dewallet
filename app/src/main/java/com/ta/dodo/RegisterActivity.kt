@@ -2,17 +2,17 @@ package com.ta.dodo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.ta.dodo.ui.main.HomeFragment
+import com.ta.dodo.ui.register.RegisterFragment
 
-class MainActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        setContentView(R.layout.register_activity)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, HomeFragment.newInstance())
-                .commitNow()
+                    .replace(R.id.container, RegisterFragment.newInstance())
+                    .commitNow()
         }
     }
 }

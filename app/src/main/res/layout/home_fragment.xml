@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.main.HomeFragment">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ta.dodo.ui.main.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_home_logo"
+            android:src="@drawable/uang_saku_inverted"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_home_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.balance}"
+            android:fontFamily="@font/montserrat"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toTopOf="@id/iv_home_logo"
+            app:layout_constraintBottom_toBottomOf="@id/iv_home_logo"
+            app:layout_constraintLeft_toRightOf="@id/iv_home_logo" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:onRefreshListener="@{() -> viewModel.refreshBalance()}"
+            app:refreshing="@{viewModel.isRefreshingWallet}"
+            app:layout_constraintTop_toBottomOf="@id/iv_home_logo">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:background="@android:color/white"
+                android:layout_height="match_parent">
+
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

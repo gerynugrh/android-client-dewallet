@@ -1,4 +1,4 @@
-package com.ta.dodo.ui.main
+package com.ta.dodo.ui.register
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -18,6 +18,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     fun loadSavedPrivateKey() {
         val wallet = Wallet.load(context)
+        Wallet.setInstance(wallet)
     }
 
     fun register() {
