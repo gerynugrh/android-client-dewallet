@@ -1,13 +1,20 @@
 package com.ta.dodo.service.user
 
-import com.google.gson.Gson
-import com.ta.dodo.service.user.BaseRequest
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 
+@JsonClass(generateAdapter = true)
 class GetPublicKeyRequest(username: String) : BaseRequest("GetPublicKey") {
     init {
-        val gson = Gson()
-        val arg = gson.toJson(Request(username))
+        val arg = getArg(username)
         args = arrayOf(arg)
+    }
+
+    private fun getArg(username: String): String {
+        val moshi = Moshi.Builder().build()
+        val adapter = moshi.adapter(Request::class.java)
+
+        return adapter.toJson(Request(username))
     }
 
     data class Request(val username: String)

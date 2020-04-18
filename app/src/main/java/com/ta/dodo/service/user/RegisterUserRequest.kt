@@ -1,13 +1,20 @@
 package com.ta.dodo.service.user
 
-import com.google.gson.Gson
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 import com.ta.dodo.model.user.User
-import com.ta.dodo.service.user.BaseRequest
 
+@JsonClass(generateAdapter = true)
 class RegisterUserRequest(user: User) : BaseRequest("Register") {
     init {
-        val gson = Gson()
-        val arg = gson.toJson(user)
+        val arg = getArg(user)
         args = arrayOf(arg)
+    }
+
+    private fun getArg(user: User) : String {
+        val moshi = Moshi.Builder().build()
+        val adapter = moshi.adapter(User::class.java)
+
+        return adapter.toJson(user)
     }
 }
