@@ -3,7 +3,6 @@ package com.ta.dodo.service.user
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 
-@JsonClass(generateAdapter = true)
 class GetPublicKeyRequest(username: String) : BaseRequest("GetPublicKey") {
     init {
         val arg = getArg(username)

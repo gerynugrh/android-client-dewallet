@@ -4,7 +4,6 @@ import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
 import com.ta.dodo.model.user.User
 
-@JsonClass(generateAdapter = true)
 class RegisterUserRequest(user: User) : BaseRequest("Register") {
     init {
         val arg = getArg(user)
