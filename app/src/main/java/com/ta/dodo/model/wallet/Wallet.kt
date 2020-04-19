@@ -72,10 +72,11 @@ class Wallet(private val username: String) {
     }
 
     fun getAccountId(): String {
-        if (!::keyPair.isInitialized) {
-            return ""
-        }
         return keyPair.accountId
+    }
+
+    fun getSeed(): String {
+        return String(keyPair.secretSeed)
     }
 }
 
