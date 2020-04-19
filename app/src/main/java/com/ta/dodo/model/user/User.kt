@@ -1,8 +1,7 @@
 package com.ta.dodo.model.user
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import com.ta.dodo.model.wallet.Wallet
+import shadow.com.google.gson.annotations.SerializedName
 import java.util.*
 
 class User(val username: String, private val wallet: Wallet) {
@@ -11,11 +10,11 @@ class User(val username: String, private val wallet: Wallet) {
     val publicKey: String = wallet.getAccountId()
 
     data class Data(
-        @Json(name = "address")
+        @SerializedName("address")
         val address: String?,
-        @Json(name = "identityNumber")
+        @SerializedName("identityNumber")
         val identityNumber: String?,
-        @Json(name = "dateOfBirth")
+        @SerializedName("dateOfBirth")
         val dateOfBirth: Date?
     )
 
@@ -46,9 +45,5 @@ class User(val username: String, private val wallet: Wallet) {
                 dateOfBirth
             )
         }
-    }
-
-    fun getEncryptedData() {
-
     }
 }
