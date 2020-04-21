@@ -4,4 +4,9 @@
     <string name="uangsaku_saku">Saku</string>
     <string name="uangsaku_uang">Uang</string>
     <string name="hint_username">Username</string>
+    <string name="fullname">Nama Lengkap</string>
+    <string name="identity_title">Identitas diri</string>
+    <string name="email">Email</string>
+    <string name="phonenumber">Nomor Telefon</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

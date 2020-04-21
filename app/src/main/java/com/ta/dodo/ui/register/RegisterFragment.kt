@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ta.dodo.databinding.RegisterFragmentBinding
 import mu.KotlinLogging
 import com.ta.dodo.MainActivity
+import com.ta.dodo.VerificationActivity
 import java.io.FileNotFoundException
 
 private val logger = KotlinLogging.logger {}
@@ -38,7 +39,7 @@ class RegisterFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         try {
             registerViewModel.loadSavedPrivateKey()
-            val intent = Intent(requireContext(), MainActivity::class.java)
+            val intent = Intent(requireContext(), VerificationActivity::class.java)
             startActivity(intent)
         } catch (ex: FileNotFoundException) {
             logger.info { "No saved private key detected" }
