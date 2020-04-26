@@ -6,11 +6,13 @@ import com.ta.dodo.model.user.User
 import com.ta.dodo.service.RetrofitClient
 import com.ta.dodo.service.user.request.RegisterUserRequest
 import com.ta.dodo.service.user.UserService
+import com.ta.dodo.service.user.request.GetUserDataRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import java.security.PrivateKey
 import java.security.PublicKey
 
 private val logger = KotlinLogging.logger {}
@@ -35,6 +37,14 @@ class UserRepositories() {
 
     suspend fun update(user: User) {
 
+    }
+
+    suspend fun getData(username: String, privateKey: PrivateKey) {
+        val request = GetUserDataRequest(username)
+        val data = userService.getUserData(request)
+
+        val decrypted = CipherUtil.decrypt(data.response!!.data, privateKey)
+        logger.info { decrypted }
     }
 
     suspend fun create(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
