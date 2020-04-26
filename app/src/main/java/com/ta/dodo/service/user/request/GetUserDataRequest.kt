@@ -2,7 +2,7 @@ package com.ta.dodo.service.user.request
 
 import com.google.gson.Gson
 
-class GetPublicKeyRequest(username: String) : BaseRequest("GetPublicKey") {
+class GetUserDataRequest(username: String) : BaseRequest("GetUserData") {
     init {
         val arg = getArg(username)
         args = listOf(arg)

@@ -1,10 +1,9 @@
 package com.ta.dodo.service.user
 
 import com.ta.dodo.service.user.request.GetPublicKeyRequest
+import com.ta.dodo.service.user.request.GetUserDataRequest
 import com.ta.dodo.service.user.request.RegisterUserRequest
-import com.ta.dodo.service.user.response.BaseResponse
-import com.ta.dodo.service.user.response.GetTokenResponse
-import com.ta.dodo.service.user.response.RegisterUserResponse
+import com.ta.dodo.service.user.response.*
 import okhttp3.RequestBody
 import retrofit2.http.*
 
@@ -23,5 +22,8 @@ interface UserService {
     ) : GetTokenResponse
 
     @POST("/channels/mychannel/chaincodes/dewallet")
-    suspend fun getPublicKey(@Body body: GetPublicKeyRequest)
+    suspend fun getPublicKey(@Body body: GetPublicKeyRequest) : BaseResponse<GetPublicKeyResponse>
+
+    @POST("/channels/mychannel/chaincodes/dewallet")
+    suspend fun getUserData(@Body body: GetUserDataRequest) : BaseResponse<GetUserDataResponse>
 }
