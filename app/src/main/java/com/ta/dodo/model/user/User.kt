@@ -2,7 +2,6 @@ package com.ta.dodo.model.user
 
 import com.ta.dodo.model.wallet.Wallet
 import shadow.com.google.gson.annotations.SerializedName
-import java.util.*
 
 class User(val username: String, private val wallet: Wallet) {
 
@@ -10,21 +9,24 @@ class User(val username: String, private val wallet: Wallet) {
     val publicKey: String = wallet.getAccountId()
 
     data class Data(
-        @SerializedName("address")
-        val address: String?,
+        @SerializedName("phoneNumber")
+        val phoneNumber: String?,
         @SerializedName("identityNumber")
         val identityNumber: String?,
-        @SerializedName("dateOfBirth")
-        val dateOfBirth: Date?
+        @SerializedName("fullName")
+        val fullName: String?,
+        @SerializedName("email")
+        val email: String?
     )
 
     class DataBuilder {
-        private var address: String? = null
+        private var phoneNumber: String? = null
         private var identityNumber: String? = null
-        private var dateOfBirth: Date? = null
+        private var fullName: String? = null
+        private var email: String? = null
 
-        fun addAddress(address: String): DataBuilder {
-            this.address = address
+        fun addPhoneNumber(phoneNumber: String): DataBuilder {
+            this.phoneNumber = phoneNumber
             return this
         }
 
@@ -33,16 +35,22 @@ class User(val username: String, private val wallet: Wallet) {
             return this
         }
 
-        fun addDateOfBirth(dateOfBirth: Date): DataBuilder {
-            this.dateOfBirth = dateOfBirth
+        fun addFullName(fullName: String): DataBuilder {
+            this.fullName = fullName
+            return this
+        }
+
+        fun addEmail(email: String): DataBuilder {
+            this.email = email
             return this
         }
 
         fun build(): Data {
             return Data(
-                address,
-                identityNumber,
-                dateOfBirth
+                phoneNumber = phoneNumber,
+                identityNumber = identityNumber,
+                fullName = fullName,
+                email = email
             )
         }
     }

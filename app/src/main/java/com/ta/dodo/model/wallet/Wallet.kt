@@ -1,19 +1,24 @@
 package com.ta.dodo.model.wallet
 
 import android.content.Context
+import com.ta.dodo.model.user.KeyGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Server
 import java.lang.Exception
+import java.nio.charset.StandardCharsets
+import java.security.PrivateKey
+import java.security.PublicKey
 
 private val logger = KotlinLogging.logger {}
 
-class Wallet(private val username: String) {
+class Wallet(val username: String) {
     private lateinit var keyPair: KeyPair
 
     companion object {
+        private val wallets = HashMap<String, Wallet>()
         private const val privateKeyFilename = "uangsaku.pk"
         private lateinit var instance: Wallet
 
@@ -41,6 +46,7 @@ class Wallet(private val username: String) {
 
     constructor(username: String, keyPair: KeyPair): this(username) {
         this.keyPair = keyPair
+        wallets[username] = this
     }
 
     suspend fun register() = withContext(Dispatchers.Default) {
@@ -71,11 +77,26 @@ class Wallet(private val username: String) {
         return@withContext account.balances[0].balance
     }
 
+    suspend fun generateKeyPair() {
+        val alias = getAccountId()
+        val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
+
+        KeyGenerator.build(alias, seed)
+    }
+
+    suspend fun getKeyPair(): Pair<PrivateKey, PublicKey> {
+        val alias = getAccountId()
+        val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
+
+        val keyGenerator = KeyGenerator.build(alias, seed)
+        return Pair(keyGenerator.getPrivateKey()!!, keyGenerator.getPublicKey()!!)
+    }
+
     fun getAccountId(): String {
         return keyPair.accountId
     }
 
-    fun getSeed(): String {
+    private fun getSeed(): String {
         return String(keyPair.secretSeed)
     }
 }
