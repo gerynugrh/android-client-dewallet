@@ -69,12 +69,18 @@ class Wallet(val username: String) {
     }
 
     suspend fun getBalance(): String = withContext(Dispatchers.IO) {
-        val server = Server("http://134.209.97.218:8000")
-        val account = server.accounts().account(keyPair.accountId)
+        val server = Server("http://34.87.91.78:8000")
+        try {
+            val account = server.accounts().account(keyPair.accountId)
 
-        logger.info { "Balance ${account.balances[0].balance}" }
+            logger.info { "Balance ${account.balances[0].balance}" }
 
-        return@withContext account.balances[0].balance
+            return@withContext account.balances[0].balance
+        } catch (ex: Exception) {
+            logger.error { ex.message }
+            return@withContext "0"
+        }
+
     }
 
     suspend fun generateKeyPair() {

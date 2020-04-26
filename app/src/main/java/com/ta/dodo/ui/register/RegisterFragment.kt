@@ -39,7 +39,7 @@ class RegisterFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         try {
             registerViewModel.loadSavedPrivateKey()
-            val intent = Intent(requireContext(), VerificationActivity::class.java)
+            val intent = Intent(requireContext(), MainActivity::class.java)
             startActivity(intent)
         } catch (ex: FileNotFoundException) {
             logger.info { "No saved private key detected" }

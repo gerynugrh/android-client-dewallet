@@ -6,8 +6,11 @@ import com.ta.dodo.model.wallet.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import mu.KotlinLogging
 import java.text.NumberFormat
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 class HomeViewModel : ViewModel() {
     private val wallet = Wallet.getInstance()
@@ -20,7 +23,16 @@ class HomeViewModel : ViewModel() {
             isRefreshingWallet.value = true
             val localeID = Locale("in", "ID")
             val numberFormat = NumberFormat.getCurrencyInstance(localeID)
-            balance.value = numberFormat.format((wallet.getBalance().toDouble() * 1000))
+
+            var balance: Double? = null
+
+            try {
+                balance = wallet.getBalance().toDouble() * 1000
+            } catch (ex: Exception) {
+                logger.error { ex.message }
+            }
+
+            this@HomeViewModel.balance.value = numberFormat.format((balance))
             isRefreshingWallet.value = false
         }
     }
