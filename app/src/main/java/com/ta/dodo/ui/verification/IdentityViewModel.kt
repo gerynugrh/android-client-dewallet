@@ -20,7 +20,7 @@ class IdentityViewModel : ViewModel() {
 
     private val userRepositories = UserRepositories()
 
-    fun submitIdentity() = viewModelScope.launch(Dispatchers.IO) {
+    fun submitIdentity() = viewModelScope.launch(Dispatchers.Main) {
         val wallet = Wallet.getInstance()
         val pair = wallet.getKeyPair()
 

@@ -34,24 +34,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
         wallet.generateKeyPair()
 
-//        val user = User(username, wallet)
-//        user.data = User.DataBuilder()
-//            .addAddress("Jalan Toya Anakan 4")
-//            .addIdentityNumber("5108062406950007")
-//            .addDateOfBirth(Date())
-//            .build()
-//
-//        val gson = Gson()
-//        val dataJson = gson.toJson(user.data)
-//
-
-//
-//        val encrypted = CipherUtil.encrypt(dataJson, publicKey)
-//        logger.info { "Encrypted data $encrypted" }
-//
-//        val decrypted = CipherUtil.decrypt(encrypted ?: "", privateKey)
-//        logger.info { "Decrypted data $decrypted" }
-
         this@RegisterViewModel.wallet.value = wallet
         isGeneratingKey.value = false
     }
