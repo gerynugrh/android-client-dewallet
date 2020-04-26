@@ -20,6 +20,7 @@ class HomeViewModel : ViewModel() {
 
     val balance = MutableLiveData("")
     val isRefreshingWallet = MutableLiveData(false)
+    val isDataInitialized = MutableLiveData(true)
 
     init {
         getUserData()
@@ -29,8 +30,8 @@ class HomeViewModel : ViewModel() {
         try {
             val pair = wallet.getKeyPair()
             userRepositories.getData(wallet.username, pair.first)
-        } catch (ex: Exception) {
-            logger.error { ex }
+        } catch (ex: UserRepositories.DataNotInitializedException) {
+            isDataInitialized.value = false
         }
     }
 

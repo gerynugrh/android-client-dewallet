@@ -5,7 +5,6 @@
     tools:context=".ui.main.HomeFragment">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.ta.dodo.ui.main.HomeViewModel" />

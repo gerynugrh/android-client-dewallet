@@ -43,7 +43,7 @@ class UserRepositories() {
             token = getToken()
         } catch (ex: Exception) {
             logger.error { ex.message }
-            return@withContext;
+            throw DataNotInitializedException(username)
         }
 
         val auth = "Bearer $token"
@@ -75,5 +75,10 @@ class UserRepositories() {
         } catch (ex: Exception) {
             logger.error { ex.message }
         }
+    }
+
+    class DataNotInitializedException(val username: String) : Exception() {
+        override val message: String?
+            get() = "$username data not initialized"
     }
 }
