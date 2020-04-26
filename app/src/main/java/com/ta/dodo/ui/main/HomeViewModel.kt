@@ -2,6 +2,7 @@ package com.ta.dodo.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,16 @@ class HomeViewModel : ViewModel() {
     val isRefreshingWallet = MutableLiveData(false)
 
     init {
+        getUserData()
+    }
+
+    private fun getUserData() = viewModelScope.launch(Dispatchers.Main) {
+        try {
+            val pair = wallet.getKeyPair()
+            userRepositories.getData(wallet.username, pair.first)
+        } catch (ex: Exception) {
+            logger.error { ex }
+        }
     }
 
     fun refreshBalance() {

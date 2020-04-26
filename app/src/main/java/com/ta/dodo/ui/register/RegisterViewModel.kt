@@ -1,10 +1,15 @@
 package com.ta.dodo.ui.register
 
 import android.app.Application
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.ta.dodo.MainActivity
+import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
+import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.*
 import mu.KotlinLogging
 
@@ -12,6 +17,7 @@ private val logger = KotlinLogging.logger {}
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
     private val context = getApplication<Application>().applicationContext
+    private val userRepositories = UserRepositories()
 
     var wallet: MutableLiveData<Wallet> = MutableLiveData()
     var username: MutableLiveData<String> = MutableLiveData("")
@@ -34,7 +40,14 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
         wallet.generateKeyPair()
 
+        val pair = wallet.getKeyPair()
+        val user = User(wallet.username, wallet)
+
+        userRepositories.create(user, pair.second)
+
         this@RegisterViewModel.wallet.value = wallet
         isGeneratingKey.value = false
+
+
     }
 }

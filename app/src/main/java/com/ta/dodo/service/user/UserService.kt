@@ -11,19 +11,22 @@ interface UserService {
     @POST("/channels/mychannel/chaincodes/dewallet")
     suspend fun register(
         @Body body: RegisterUserRequest,
-        @Header("authorization") authHeader: String
-    ) : BaseResponse<RegisterUserResponse>
+        @Header("authorization") auth: String
+    ): BaseResponse<RegisterUserResponse>
 
     @FormUrlEncoded
     @POST("/users")
     suspend fun getToken(
         @Field("username") username: String,
         @Field("orgName") orgName: String
-    ) : GetTokenResponse
+    ): GetTokenResponse
 
     @POST("/channels/mychannel/chaincodes/dewallet")
-    suspend fun getPublicKey(@Body body: GetPublicKeyRequest) : BaseResponse<GetPublicKeyResponse>
+    suspend fun getPublicKey(@Body body: GetPublicKeyRequest): BaseResponse<GetPublicKeyResponse>
 
     @POST("/channels/mychannel/chaincodes/dewallet")
-    suspend fun getUserData(@Body body: GetUserDataRequest) : BaseResponse<GetUserDataResponse>
+    suspend fun getUserData(
+        @Body body: GetUserDataRequest,
+        @Header("authorization") auth: String
+    ): BaseResponse<GetUserDataResponse>
 }

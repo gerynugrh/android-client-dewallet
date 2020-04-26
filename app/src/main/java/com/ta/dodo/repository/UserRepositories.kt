@@ -10,8 +10,6 @@ import com.ta.dodo.service.user.request.GetUserDataRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import java.security.PrivateKey
 import java.security.PublicKey
 
@@ -39,24 +37,25 @@ class UserRepositories() {
 
     }
 
-    suspend fun getData(username: String, privateKey: PrivateKey) {
+    suspend fun getData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
+        val token: String?
+        try {
+            token = getToken()
+        } catch (ex: Exception) {
+            logger.error { ex.message }
+            return@withContext;
+        }
+
+        val auth = "Bearer $token"
+
         val request = GetUserDataRequest(username)
-        val data = userService.getUserData(request)
+        val data = userService.getUserData(request, auth)
 
         val decrypted = CipherUtil.decrypt(data.response!!.data, privateKey)
         logger.info { decrypted }
     }
 
     suspend fun create(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
-        val dataJson = gson.toJson(user.data)
-
-        val encrypted = CipherUtil.encrypt(
-            dataJson,
-            publicKey
-        )
-
-        logger.info { "Encrypted data $encrypted" }
-
         val token: String?
 
         try {
@@ -66,13 +65,13 @@ class UserRepositories() {
             return@withContext;
         }
 
-        val authHeader = "Bearer $token"
+        val auth = "Bearer $token"
 
         val request =
-            RegisterUserRequest(user, encrypted)
-        logger.info { authHeader }
+            RegisterUserRequest(user)
+        logger.info { auth }
         try {
-            userService.register(request, authHeader)
+            userService.register(request, auth)
         } catch (ex: Exception) {
             logger.error { ex.message }
         }
