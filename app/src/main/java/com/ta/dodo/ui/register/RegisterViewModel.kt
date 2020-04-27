@@ -39,15 +39,11 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         logger.info { "Finished generating key" }
 
         wallet.generateKeyPair()
-
-        val pair = wallet.getKeyPair()
         val user = User(wallet.username, wallet)
 
-        userRepositories.create(user, pair.second)
+        userRepositories.create(user)
 
         this@RegisterViewModel.wallet.value = wallet
         isGeneratingKey.value = false
-
-
     }
 }

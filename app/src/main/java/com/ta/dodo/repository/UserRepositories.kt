@@ -40,7 +40,7 @@ class UserRepositories() {
         val token = getToken()
         val auth = "Bearer $token"
 
-        val gson = Gson()
+        logger.info { auth }
         val dataJson = gson.toJson(user.data)
         val encryptedData = CipherUtil.encrypt(dataJson, publicKey)!!
         val request = UpdateUserDataRequest(encryptedData)
@@ -60,12 +60,11 @@ class UserRepositories() {
             throw DataNotInitializedException(username)
         }
 
-
         val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey)
         logger.info { decrypted }
     }
 
-    suspend fun create(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
+    suspend fun create(user: User) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 

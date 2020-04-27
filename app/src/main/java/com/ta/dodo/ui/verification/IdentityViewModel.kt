@@ -14,6 +14,8 @@ private val logger = KotlinLogging.logger {}
 
 class IdentityViewModel : ViewModel() {
 
+    private val wallet = Wallet.getInstance()
+
     val fullName = MutableLiveData<String>()
     val email = MutableLiveData<String>()
     val phoneNumber = MutableLiveData<String>()
@@ -21,7 +23,6 @@ class IdentityViewModel : ViewModel() {
     private val userRepositories = UserRepositories()
 
     fun submitIdentity() = viewModelScope.launch(Dispatchers.Main) {
-        val wallet = Wallet.getInstance()
         val pair = wallet.getKeyPair()
 
         logger.info { "Using ${wallet.username} wallet" }

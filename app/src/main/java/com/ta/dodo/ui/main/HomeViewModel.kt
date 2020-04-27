@@ -2,6 +2,7 @@ package com.ta.dodo.ui.main
 
 import android.app.Application
 import android.content.Intent
+import android.view.View
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -19,9 +20,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val context = getApplication<Application>().applicationContext
-
+class HomeViewModel : ViewModel() {
     private val wallet = Wallet.getInstance()
     private val userRepositories = UserRepositories()
 
@@ -61,7 +60,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun navigateToVerificationActivity() {
+    fun navigateToVerificationActivity(view: View) {
+        val context = view.context
         val intent = Intent(context, VerificationActivity::class.java)
         startActivity(context, intent, null)
     }
