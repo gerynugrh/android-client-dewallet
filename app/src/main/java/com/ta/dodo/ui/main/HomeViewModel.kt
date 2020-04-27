@@ -1,10 +1,8 @@
 package com.ta.dodo.ui.main
 
-import android.app.Application
 import android.content.Intent
 import android.view.View
 import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +33,7 @@ class HomeViewModel : ViewModel() {
     private fun getUserData() = viewModelScope.launch(Dispatchers.Main) {
         try {
             val pair = wallet.getKeyPair()
-            userRepositories.getData(wallet.username, pair.first)
+            userRepositories.getOwnData(wallet.username, pair.first)
         } catch (ex: UserRepositories.DataNotInitializedException) {
             isDataInitialized.value = false
         }

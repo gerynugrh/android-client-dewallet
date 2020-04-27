@@ -48,11 +48,11 @@ class UserRepositories() {
         userService.updateUserData(request, auth)
     }
 
-    suspend fun getData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
+    suspend fun getOwnData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 
-        val request = GetUserDataRequest(username)
+        val request = GetUserDataRequest(username, username)
         val data: BaseResponse<GetUserDataResponse>?
 
         data = userService.getUserData(request, auth)
