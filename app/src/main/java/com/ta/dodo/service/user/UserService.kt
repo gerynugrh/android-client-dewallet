@@ -3,8 +3,8 @@ package com.ta.dodo.service.user
 import com.ta.dodo.service.user.request.GetPublicKeyRequest
 import com.ta.dodo.service.user.request.GetUserDataRequest
 import com.ta.dodo.service.user.request.RegisterUserRequest
+import com.ta.dodo.service.user.request.UpdateUserDataRequest
 import com.ta.dodo.service.user.response.*
-import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface UserService {
@@ -13,6 +13,12 @@ interface UserService {
         @Body body: RegisterUserRequest,
         @Header("authorization") auth: String
     ): BaseResponse<RegisterUserResponse>
+
+    @POST("/channels/mychannel/chaincodes/dewallet")
+    suspend fun updateUserData(
+        @Body body: UpdateUserDataRequest,
+        @Header("authorization")  auth: String
+    ): BaseResponse<UpdateUserDataResponse>
 
     @FormUrlEncoded
     @POST("/users")

@@ -7,6 +7,9 @@ import com.ta.dodo.service.RetrofitClient
 import com.ta.dodo.service.user.request.RegisterUserRequest
 import com.ta.dodo.service.user.UserService
 import com.ta.dodo.service.user.request.GetUserDataRequest
+import com.ta.dodo.service.user.request.UpdateUserDataRequest
+import com.ta.dodo.service.user.response.BaseResponse
+import com.ta.dodo.service.user.response.GetUserDataResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
@@ -33,42 +36,39 @@ class UserRepositories() {
         return@withContext mToken
     }
 
-    suspend fun update(user: User) {
+    suspend fun updateUserData(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
+        val token = getToken()
+        val auth = "Bearer $token"
 
+        val gson = Gson()
+        val dataJson = gson.toJson(user.data)
+        val encryptedData = CipherUtil.encrypt(dataJson, publicKey)!!
+        val request = UpdateUserDataRequest(encryptedData)
+
+        userService.updateUserData(request, auth)
     }
 
     suspend fun getData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
-        val token: String?
-        try {
-            token = getToken()
-        } catch (ex: Exception) {
-            logger.error { ex.message }
-            throw DataNotInitializedException(username)
-        }
-
+        val token = getToken()
         val auth = "Bearer $token"
 
         val request = GetUserDataRequest(username)
-        val data = userService.getUserData(request, auth)
+        val data: BaseResponse<GetUserDataResponse>?
+        try {
+            data = userService.getUserData(request, auth)
+        } catch (ex: Exception) {
+            throw DataNotInitializedException(username)
+        }
 
         val decrypted = CipherUtil.decrypt(data.response!!.data, privateKey)
         logger.info { decrypted }
     }
 
     suspend fun create(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
-        val token: String?
-
-        try {
-            token = getToken()
-        } catch (ex: Exception) {
-            logger.error { ex.message }
-            return@withContext;
-        }
-
+        val token = getToken()
         val auth = "Bearer $token"
 
-        val request =
-            RegisterUserRequest(user)
+        val request = RegisterUserRequest(user)
         logger.info { auth }
         try {
             userService.register(request, auth)
@@ -80,5 +80,10 @@ class UserRepositories() {
     class DataNotInitializedException(val username: String) : Exception() {
         override val message: String?
             get() = "$username data not initialized"
+    }
+
+    class UsernameNotFoundException(val username: String) : Exception() {
+        override val message: String?
+            get() = "$username not found"
     }
 }

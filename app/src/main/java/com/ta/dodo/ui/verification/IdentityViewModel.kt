@@ -33,6 +33,6 @@ class IdentityViewModel : ViewModel() {
             .addFullName(fullName.value!!)
             .build()
 
-        userRepositories.create(user, pair.second)
+        userRepositories.updateUserData(user, pair.second)
     }
 }
