@@ -2,6 +2,7 @@ package com.ta.dodo.model.wallet
 
 import android.content.Context
 import com.ta.dodo.model.user.KeyGenerator
+import com.ta.dodo.repository.WalletRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
@@ -16,6 +17,7 @@ private val logger = KotlinLogging.logger {}
 
 class Wallet(val username: String) {
     private lateinit var keyPair: KeyPair
+    private val walletRepositories = WalletRepositories()
 
     companion object {
         private val wallets = HashMap<String, Wallet>()
@@ -80,7 +82,10 @@ class Wallet(val username: String) {
             logger.error { ex.message }
             return@withContext "0"
         }
+    }
 
+    suspend fun sendMoney(receiver: String, amount: String) = withContext(Dispatchers.IO) {
+        walletRepositories.sendMoney(getSeed(), receiver, amount)
     }
 
     suspend fun generateKeyPair() {

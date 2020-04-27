@@ -17,7 +17,7 @@ interface UserService {
     @POST("/channels/mychannel/chaincodes/dewallet")
     suspend fun updateUserData(
         @Body body: UpdateUserDataRequest,
-        @Header("authorization")  auth: String
+        @Header("authorization") auth: String
     ): BaseResponse<UpdateUserDataResponse>
 
     @FormUrlEncoded
@@ -28,7 +28,10 @@ interface UserService {
     ): GetTokenResponse
 
     @POST("/channels/mychannel/chaincodes/dewallet")
-    suspend fun getPublicKey(@Body body: GetPublicKeyRequest): BaseResponse<GetPublicKeyResponse>
+    suspend fun getPublicKey(
+        @Body body: GetPublicKeyRequest,
+        @Header("authorization") auth: String
+    ): BaseResponse<GetPublicKeyResponse>
 
     @POST("/channels/mychannel/chaincodes/dewallet")
     suspend fun getUserData(

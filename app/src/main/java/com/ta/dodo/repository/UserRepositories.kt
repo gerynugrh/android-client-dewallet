@@ -6,6 +6,7 @@ import com.ta.dodo.model.user.User
 import com.ta.dodo.service.RetrofitClient
 import com.ta.dodo.service.user.request.RegisterUserRequest
 import com.ta.dodo.service.user.UserService
+import com.ta.dodo.service.user.request.GetPublicKeyRequest
 import com.ta.dodo.service.user.request.GetUserDataRequest
 import com.ta.dodo.service.user.request.UpdateUserDataRequest
 import com.ta.dodo.service.user.response.BaseResponse
@@ -62,6 +63,19 @@ class UserRepositories() {
 
         val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey)
         logger.info { decrypted }
+    }
+
+    suspend fun getPublicKey(username: String) = withContext(Dispatchers.IO) {
+        val token = getToken()
+        val auth = "Bearer $token"
+
+        val request = GetPublicKeyRequest(username)
+        try {
+            val data = userService.getPublicKey(request, auth)
+            return@withContext data.data!!.publicKey
+        } catch (ex: Exception) {
+            throw UsernameNotFoundException(username)
+        }
     }
 
     suspend fun create(user: User) = withContext(Dispatchers.IO) {
