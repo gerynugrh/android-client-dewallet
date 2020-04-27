@@ -54,13 +54,14 @@ class UserRepositories() {
 
         val request = GetUserDataRequest(username)
         val data: BaseResponse<GetUserDataResponse>?
-        try {
-            data = userService.getUserData(request, auth)
-        } catch (ex: Exception) {
+
+        data = userService.getUserData(request, auth)
+        if (data.data!!.data == "") {
             throw DataNotInitializedException(username)
         }
 
-        val decrypted = CipherUtil.decrypt(data.response!!.data, privateKey)
+
+        val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey)
         logger.info { decrypted }
     }
 

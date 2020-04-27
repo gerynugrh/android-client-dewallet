@@ -59,6 +59,7 @@
                     android:layout_marginRight="12dp"
                     android:paddingVertical="12dp"
                     android:paddingHorizontal="24dp"
+                    android:onClick="@{() -> viewModel.navigateToVerificationActivity()}"
                     android:elevation="2dp"
                     android:background="@drawable/rounded_button_pressed">
 

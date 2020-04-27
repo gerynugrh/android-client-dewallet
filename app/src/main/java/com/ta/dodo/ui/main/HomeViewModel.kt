@@ -1,8 +1,13 @@
 package com.ta.dodo.ui.main
 
+import android.app.Application
+import android.content.Intent
+import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ta.dodo.VerificationActivity
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +19,9 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = getApplication<Application>().applicationContext
+
     private val wallet = Wallet.getInstance()
     private val userRepositories = UserRepositories()
 
@@ -52,5 +59,10 @@ class HomeViewModel : ViewModel() {
             this@HomeViewModel.balance.value = numberFormat.format((balance))
             isRefreshingWallet.value = false
         }
+    }
+
+    fun navigateToVerificationActivity() {
+        val intent = Intent(context, VerificationActivity::class.java)
+        startActivity(context, intent, null)
     }
 }
