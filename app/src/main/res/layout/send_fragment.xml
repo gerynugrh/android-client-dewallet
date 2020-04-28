@@ -10,8 +10,9 @@
             type="com.ta.dodo.ui.main.SendViewModel" />
     </data>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -32,6 +33,6 @@
             android:layout_height="wrap_content"
             android:text="@string/send" />
 
-    </FrameLayout>
+    </LinearLayout>
 
 </layout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/sendFragment">
+    <fragment
+        android:id="@+id/sendFragment"
+        android:name="com.ta.dodo.ui.main.SendFragment"
+        android:label="send_fragment"
+        tools:layout="@layout/send_fragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.ta.dodo.ui.main.HomeFragment"
+        android:label="home_fragment"
+        tools:layout="@layout/home_fragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_sendFragment"
+            app:destination="@id/sendFragment" />
+    </fragment>
+</navigation>
