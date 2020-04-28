@@ -1,13 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:keyboard="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".ui.main.send.SetAmountFragment">
 
-    <TextView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.ta.dodo.ui.main.send.SetAmountViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="36dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingHorizontal="28dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Isi Nominal"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:hint="Rp0"
+                android:textSize="32sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginBottom="18dp"
+            android:background="@color/lightPink" />
+
+        <com.davidmiguel.numberkeyboard.NumberKeyboard
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            keyboard:numberkeyboard_numberKeyBackground="@android:color/white"
+            android:layout_weight="0.7"
+            keyboard:numberkeyboard_numberKeyTypeface="@font/montserrat_bold"
+            keyboard:numberkeyboard_keyPadding="8dp"
+            keyboard:numberkeyboard_numberKeyTextSize="22sp"
+            keyboard:numberkeyboard_keyboardType="integer" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="28dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/colorSecondary"
+            android:paddingVertical="12dp"
+            android:text="Konfirmasi" />
+
+    </LinearLayout>
+
+</layout>

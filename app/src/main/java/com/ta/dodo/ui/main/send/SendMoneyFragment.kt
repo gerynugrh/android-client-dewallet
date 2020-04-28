@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
-import com.ta.dodo.databinding.SendFragmentBinding
+import androidx.navigation.fragment.findNavController
+import com.ta.dodo.R
+import com.ta.dodo.databinding.SendMoneyFragmentBinding
 
 class SendMoneyFragment : Fragment() {
 
@@ -23,7 +25,7 @@ class SendMoneyFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = SendFragmentBinding.inflate(inflater).apply {
+        val binding = SendMoneyFragmentBinding.inflate(inflater).apply {
             viewModel = sendMoneyViewModel
             lifecycleOwner = viewLifecycleOwner
         }
@@ -34,4 +36,14 @@ class SendMoneyFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        sendMoneyViewModel.isPublicKeyFetched.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                return@Observer
+            }
+            findNavController().navigate(R.id.setAmountFragment)
+        })
+    }
 }

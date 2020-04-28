@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sendMoneyButton = view.findViewById(R.id.bt_home_send_money)
         sendMoneyButton.setOnClickListener {
-            findNavController().navigate(R.id.sendFragment, null)
+            findNavController().navigate(R.id.sendFragment)
         }
     }
 

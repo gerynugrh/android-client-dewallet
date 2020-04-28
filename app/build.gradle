@@ -82,4 +82,6 @@ dependencies {
 
     // Dynamic Feature Module Support
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
+
+    implementation "com.github.gerywahyunugraha:number-keyboard:3.0.0-alpha07"
 }
