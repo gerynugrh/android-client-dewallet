@@ -22,6 +22,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     var wallet: MutableLiveData<Wallet> = MutableLiveData()
     var username: MutableLiveData<String> = MutableLiveData("")
     var isGeneratingKey: MutableLiveData<Boolean> = MutableLiveData(false)
+    var isRegisterStepComplete: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun loadSavedPrivateKey() {
         val wallet = Wallet.load(context)
@@ -42,8 +43,10 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         val user = User(wallet.username, wallet)
 
         userRepositories.create(user)
+        Wallet.setInstance(wallet)
 
         this@RegisterViewModel.wallet.value = wallet
         isGeneratingKey.value = false
+        isRegisterStepComplete.value = true
     }
 }

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ta.dodo.databinding.RegisterFragmentBinding
 import mu.KotlinLogging
@@ -31,6 +32,14 @@ class RegisterFragment : Fragment() {
             viewModel = registerViewModel
             lifecycleOwner = viewLifecycleOwner
         }
+
+        registerViewModel.isRegisterStepComplete.observe(viewLifecycleOwner, Observer {
+            if (!it) {
+                return@Observer
+            }
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+        })
 
         return binding.root
     }

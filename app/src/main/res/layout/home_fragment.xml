@@ -5,7 +5,9 @@
     tools:context=".ui.main.HomeFragment">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.ta.dodo.ui.main.HomeViewModel" />
@@ -53,22 +55,35 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginTop="12dp"
-                    android:visibility="@{viewModel.isDataInitialized ? View.INVISIBLE : View.VISIBLE}"
-                    android:layout_marginRight="12dp"
-                    android:paddingVertical="12dp"
-                    android:paddingHorizontal="24dp"
-                    android:onClick="@{(v) -> viewModel.navigateToVerificationActivity(v)}"
-                    android:elevation="2dp"
-                    android:background="@drawable/rounded_button_pressed">
+                    android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginRight="12dp"
+                        android:background="@drawable/rounded_button_pressed"
+                        android:elevation="2dp"
+                        android:onClick="@{(v) -> viewModel.navigateToVerificationActivity(v)}"
+                        android:paddingHorizontal="24dp"
+                        android:paddingVertical="12dp"
+                        android:visibility="@{viewModel.isDataInitialized ? View.INVISIBLE : View.VISIBLE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jadi premium dengan mengisi identitasmu"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/bt_home_send_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"
-                        android:text="Jadi premium dengan mengisi identitasmu" />
+                        android:text="Send" />
 
                 </LinearLayout>
 

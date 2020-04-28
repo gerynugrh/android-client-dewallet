@@ -1,12 +1,13 @@
 package com.ta.dodo.ui.main
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 
 import com.ta.dodo.R
 import com.ta.dodo.databinding.HomeFragmentBinding
@@ -21,6 +22,8 @@ class HomeFragment : Fragment() {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
+    private lateinit var sendMoneyButton: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,9 +36,16 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        sendMoneyButton = view.findViewById(R.id.bt_home_send_money)
+        sendMoneyButton.setOnClickListener {
+            findNavController().navigate(R.id.sendFragment, null)
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         homeViewModel.refreshBalance()
     }
-
 }
