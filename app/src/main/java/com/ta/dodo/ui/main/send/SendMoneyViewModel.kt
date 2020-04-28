@@ -1,4 +1,4 @@
-package com.ta.dodo.ui.main
+package com.ta.dodo.ui.main.send
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,7 +7,7 @@ import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SendViewModel : ViewModel() {
+class SendMoneyViewModel : ViewModel() {
     private val userRepositories = UserRepositories()
     val query = MutableLiveData("")
 

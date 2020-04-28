@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.main.SendFragment">
+    tools:context=".ui.main.send.SendMoneyFragment">
 
     <data>
 
         <variable
             name="viewModel"
-            type="com.ta.dodo.ui.main.SendViewModel" />
+            type="com.ta.dodo.ui.main.send.SendMoneyViewModel" />
     </data>
 
     <LinearLayout
