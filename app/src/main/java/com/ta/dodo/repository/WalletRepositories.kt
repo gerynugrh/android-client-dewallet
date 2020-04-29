@@ -76,5 +76,7 @@ class WalletRepositories {
             count += 1
             operation = operation.getNextPage(httpClient)
         }
+
+        return@withContext transactions
     }
 }

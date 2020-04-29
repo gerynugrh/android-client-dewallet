@@ -7,8 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ta.dodo.VerificationActivity
+import com.ta.dodo.model.wallet.TransactionHistory
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
+import com.ta.dodo.repository.WalletRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,10 +23,13 @@ private val logger = KotlinLogging.logger {}
 class HomeViewModel : ViewModel() {
     private val wallet = Wallet.getInstance()
     private val userRepositories = UserRepositories()
+    private val walletRepositories = WalletRepositories()
 
     val balance = MutableLiveData("")
     val isRefreshingWallet = MutableLiveData(false)
     val isDataInitialized = MutableLiveData(true)
+
+    var transactions = ArrayList<TransactionHistory>()
 
     init {
         getUserData()
@@ -39,23 +44,26 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun refreshBalance() {
-        GlobalScope.launch (Dispatchers.Main) {
-            isRefreshingWallet.value = true
-            val localeID = Locale("in", "ID")
-            val numberFormat = NumberFormat.getCurrencyInstance(localeID)
+    fun refreshTransactions() = viewModelScope.launch(Dispatchers.Main) {
+        val accountId = wallet.getAccountId()
+        transactions = walletRepositories.getTransactions(accountId)
+    }
 
-            var balance: Double? = null
+    fun refreshBalance() = viewModelScope.launch(Dispatchers.Main) {
+        isRefreshingWallet.value = true
+        val localeID = Locale("in", "ID")
+        val numberFormat = NumberFormat.getCurrencyInstance(localeID)
 
-            try {
-                balance = wallet.getBalance().toDouble() * 1000
-            } catch (ex: Exception) {
-                logger.error { ex.message }
-            }
+        var balance: Double? = null
 
-            this@HomeViewModel.balance.value = numberFormat.format((balance))
-            isRefreshingWallet.value = false
+        try {
+            balance = wallet.getBalance().toDouble() * 1000
+        } catch (ex: Exception) {
+            logger.error { ex.message }
         }
+
+        this@HomeViewModel.balance.value = numberFormat.format((balance))
+        isRefreshingWallet.value = false
     }
 
     fun navigateToVerificationActivity(view: View) {
