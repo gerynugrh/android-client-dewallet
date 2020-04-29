@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 
@@ -22,7 +23,7 @@ class HomeFragment : Fragment() {
         ViewModelProvider(this).get(HomeViewModel::class.java)
     }
 
-    private lateinit var sendMoneyButton: Button
+    private lateinit var sendMoneyButton: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sendMoneyButton = view.findViewById(R.id.bt_home_send_money)
+        sendMoneyButton = view.findViewById(R.id.iv_pay_icon)
         sendMoneyButton.setOnClickListener {
             findNavController().navigate(R.id.sendFragment)
         }
