@@ -26,17 +26,19 @@
             android:paddingHorizontal="28dp">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Penerim"
+                android:textAllCaps="true"
+                android:textColor="@color/lightGrey"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/tv_receiver_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@{viewModel.username}" />
-
-            <TextView
-                android:id="@+id/tv_receiver_pk"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.publicKey}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,12 +83,14 @@
             android:layout_marginHorizontal="28dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="24dp"
+            app:spinning_bar_color="@android:color/white"
             android:backgroundTint="@color/colorSecondary"
             android:onClick="@{() -> viewModel.confirmTransaction()}"
             android:paddingVertical="12dp"
             android:text="Konfirmasi"
             android:textColor="@android:color/white"
-            app:initialCornerAngle="4dp" />
+            app:spinning_bar_padding="6dp"
+            app:initialCornerAngle="0dp" />
 
     </LinearLayout>
 

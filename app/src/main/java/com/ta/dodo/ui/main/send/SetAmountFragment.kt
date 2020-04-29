@@ -1,6 +1,5 @@
 package com.ta.dodo.ui.main.send
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,14 +13,8 @@ import com.davidmiguel.numberkeyboard.NumberKeyboard
 
 import com.ta.dodo.R
 import com.ta.dodo.databinding.SetAmountFragmentBinding
-import com.ta.dodo.model.wallet.Transaction
 
 class SetAmountFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = SetAmountFragment()
-    }
-
     private val setAmountViewModel: SetAmountViewModel by lazy {
         ViewModelProvider(this).get(SetAmountViewModel::class.java)
     }
@@ -46,26 +39,24 @@ class SetAmountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setAmountKeyboard = view.findViewById(R.id.set_amount_keyboard)
         confirmButton = view.findViewById(R.id.bt_set_amount_confirm)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        setConfirmButtonListener(confirmButton)
         setAmountKeyboard.setListener(setAmountViewModel)
-        setCircularProgressButtonListener(confirmButton)
-
         setAmountViewModel.apply {
             username.value = args.username
             publicKey.value = args.publicKey
         }
     }
 
-    private fun setCircularProgressButtonListener(button: CircularProgressButton) {
+    private fun setConfirmButtonListener(button: CircularProgressButton) {
         setAmountViewModel.transactionState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 Transaction.START -> button.startAnimation()
                 Transaction.FINISHED -> button.revertAnimation()
             }
         })
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
     }
 }

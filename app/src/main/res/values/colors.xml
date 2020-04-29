@@ -6,4 +6,6 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="lightPink">#FCE4EC</color>
     <color name="lightGrey">#9E9E9E</color>
+    <color name="black">#212121</color>
+    <color name="veryLightGrey">#EEEEEE</color>
 </resources>

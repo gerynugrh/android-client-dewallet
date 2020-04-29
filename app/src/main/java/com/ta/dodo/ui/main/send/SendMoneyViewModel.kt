@@ -17,14 +17,24 @@ class SendMoneyViewModel : ViewModel() {
     var username: String = ""
     var publicKey: String = ""
 
+    val searchPublicKeyState = MutableLiveData(SearchPublicKey.IDLE)
+
     val isPublicKeyFetched = MutableLiveData(false)
 
     fun sendMoney() = viewModelScope.launch(Dispatchers.Main) {
+        searchPublicKeyState.value = SearchPublicKey.START
+
         username = query.value!!
         publicKey = userRepositories.getPublicKey(username)
 
-        logger.info { publicKey }
+        searchPublicKeyState.value = SearchPublicKey.FINISHED
+    }
+}
 
-        isPublicKeyFetched.value = true
+class SearchPublicKey {
+    companion object {
+        const val IDLE = 0
+        const val START = 1
+        const val FINISHED = 2
     }
 }

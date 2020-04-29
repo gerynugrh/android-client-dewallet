@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.davidmiguel.numberkeyboard.NumberKeyboardListener
-import com.ta.dodo.model.wallet.Transaction
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.util.NumberUtil
 import kotlinx.coroutines.Dispatchers
@@ -56,5 +55,13 @@ class SetAmountViewModel : ViewModel(), NumberKeyboardListener {
             return
         }
         amount.value = NumberUtil.getCurrencyRepresentation(mAmount)
+    }
+}
+
+class Transaction {
+    companion object {
+        const val IDLE = 0
+        const val START = 1
+        const val FINISHED = 2
     }
 }
