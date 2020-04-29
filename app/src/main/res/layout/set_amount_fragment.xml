@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
                 android:hint="Rp0"
+                android:text="@{viewModel.amount}"
                 android:textSize="32sp" />
 
         </LinearLayout>
@@ -47,6 +48,7 @@
             android:background="@color/lightPink" />
 
         <com.davidmiguel.numberkeyboard.NumberKeyboard
+            android:id="@+id/set_amount_keyboard"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             keyboard:numberkeyboard_numberKeyBackground="@android:color/white"
