@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.davidmiguel.numberkeyboard.NumberKeyboard
 
 import com.ta.dodo.R
@@ -21,6 +22,8 @@ class SetAmountFragment : Fragment() {
     private val setAmountViewModel: SetAmountViewModel by lazy {
         ViewModelProvider(this).get(SetAmountViewModel::class.java)
     }
+
+    private val args: SetAmountFragmentArgs by navArgs()
 
     private lateinit var setAmountKeyboard: NumberKeyboard
 
@@ -39,6 +42,11 @@ class SetAmountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setAmountKeyboard = view.findViewById(R.id.set_amount_keyboard)
         setAmountKeyboard.setListener(setAmountViewModel)
+
+        setAmountViewModel.apply {
+            username.value = args.username
+            publicKey.value = args.publicKey
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

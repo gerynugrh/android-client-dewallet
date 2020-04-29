@@ -26,5 +26,12 @@
         android:id="@+id/setAmountFragment"
         android:name="com.ta.dodo.ui.main.send.SetAmountFragment"
         android:label="set_amount_fragment"
-        tools:layout="@layout/set_amount_fragment" />
+        tools:layout="@layout/set_amount_fragment" >
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="publicKey"
+            app:argType="string" />
+    </fragment>
 </navigation>

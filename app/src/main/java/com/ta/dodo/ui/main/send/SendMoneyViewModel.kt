@@ -14,13 +14,16 @@ class SendMoneyViewModel : ViewModel() {
     private val userRepositories = UserRepositories()
     val query = MutableLiveData("")
 
+    var username: String = ""
+    var publicKey: String = ""
+
     val isPublicKeyFetched = MutableLiveData(false)
 
     fun sendMoney() = viewModelScope.launch(Dispatchers.Main) {
-        val username = query.value!!
-        val receiver = userRepositories.getPublicKey(username)
+        username = query.value!!
+        publicKey = userRepositories.getPublicKey(username)
 
-        logger.info { receiver }
+        logger.info { publicKey }
 
         isPublicKeyFetched.value = true
     }

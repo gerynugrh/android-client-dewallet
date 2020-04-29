@@ -43,7 +43,11 @@ class SendMoneyFragment : Fragment() {
             if (!it) {
                 return@Observer
             }
-            findNavController().navigate(R.id.setAmountFragment)
+            val action = SendMoneyFragmentDirections.actionSendFragmentToSetAmountFragment(
+                sendMoneyViewModel.username,
+                sendMoneyViewModel.publicKey
+            )
+            findNavController().navigate(action)
         })
     }
 }

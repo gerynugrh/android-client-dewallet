@@ -8,6 +8,9 @@ import com.ta.dodo.util.NumberUtil
 class SetAmountViewModel : ViewModel(), NumberKeyboardListener {
 
     val amount = MutableLiveData("")
+    val username = MutableLiveData("")
+    val publicKey = MutableLiveData("")
+
     private var mAmount: Int = 0
 
     override fun onLeftAuxButtonClicked() {
