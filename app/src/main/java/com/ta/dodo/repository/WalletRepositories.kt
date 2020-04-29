@@ -4,6 +4,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import org.stellar.sdk.*
+import org.stellar.sdk.requests.ErrorResponse
+import org.stellar.sdk.responses.AccountResponse
+import org.stellar.sdk.responses.SubmitTransactionUnknownResponseException
 
 
 private val logger = KotlinLogging.logger {}
@@ -19,8 +22,17 @@ class WalletRepositories {
 
         }
 
+        logger.info { "Initiating transaction from $seed amount $amount" }
+
         val source = KeyPair.fromSecretSeed(seed)
-        val sourceAccount = server.accounts().account(seed)
+        lateinit var sourceAccount: AccountResponse
+        try {
+            sourceAccount = server.accounts().account(source.accountId)
+        } catch (ex: ErrorResponse) {
+            logger.error { ex.body }
+        }
+
+        logger.info { "Success building sender account" }
 
         val operation = PaymentOperation.Builder(receiver, AssetTypeNative(), amount).build()
         val transaction = Transaction.Builder(sourceAccount, network)
@@ -28,11 +40,13 @@ class WalletRepositories {
             .setTimeout(180)
             .build()
 
+        logger.info { "Success buildling transaction" }
+
         transaction.sign(source)
         try {
             server.submitTransaction(transaction)
-        } catch (ex: Exception) {
-
+        } catch (ex: SubmitTransactionUnknownResponseException) {
+                logger.error { "Code ${ex.code} Message: ${ex.body}" }
         }
     }
 }
