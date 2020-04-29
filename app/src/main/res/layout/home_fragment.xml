@@ -64,7 +64,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginRight="12dp"
                         android:background="@drawable/rounded_button_pressed"
-                        android:elevation="2dp"
+                        android:elevation="4dp"
                         android:onClick="@{(v) -> viewModel.navigateToVerificationActivity(v)}"
                         android:paddingHorizontal="24dp"
                         android:paddingVertical="12dp"
@@ -84,6 +84,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="12dp"
                         android:layout_marginTop="12dp"
+                        android:elevation="4dp"
                         android:layout_marginRight="12dp"
                         android:background="@drawable/rounded_button_pressed"
                         android:paddingVertical="12dp"
@@ -177,6 +178,12 @@
                         </RelativeLayout>
 
                     </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_transaction_history"
+                        android:layout_marginTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 

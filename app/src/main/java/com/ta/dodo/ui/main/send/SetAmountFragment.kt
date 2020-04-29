@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton
 import com.davidmiguel.numberkeyboard.NumberKeyboard
@@ -55,7 +56,10 @@ class SetAmountFragment : Fragment() {
         setAmountViewModel.transactionState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 Transaction.START -> button.startAnimation()
-                Transaction.FINISHED -> button.revertAnimation()
+                Transaction.FINISHED -> {
+                    button.revertAnimation()
+                    findNavController().navigate(R.id.homeFragment)
+                }
             }
         })
     }

@@ -11,6 +11,7 @@ import com.ta.dodo.model.wallet.TransactionHistory
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import com.ta.dodo.repository.WalletRepositories
+import com.ta.dodo.ui.main.adapter.TransactionsHistoryAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -29,7 +30,8 @@ class HomeViewModel : ViewModel() {
     val isRefreshingWallet = MutableLiveData(false)
     val isDataInitialized = MutableLiveData(true)
 
-    var transactions = ArrayList<TransactionHistory>()
+    private var transactions = ArrayList<TransactionHistory>()
+    var transactionsHistoryAdapter = TransactionsHistoryAdapter(transactions, wallet.getAccountId())
 
     init {
         getUserData()
@@ -47,6 +49,7 @@ class HomeViewModel : ViewModel() {
     fun refreshTransactions() = viewModelScope.launch(Dispatchers.Main) {
         val accountId = wallet.getAccountId()
         transactions = walletRepositories.getTransactions(accountId)
+        transactionsHistoryAdapter.addAll(transactions)
     }
 
     fun refreshBalance() = viewModelScope.launch(Dispatchers.Main) {

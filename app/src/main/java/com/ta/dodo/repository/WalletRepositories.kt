@@ -63,13 +63,15 @@ class WalletRepositories {
         var count = 0
         while (operation != null && count < 5) {
             for (record in operation.records) {
+                logger.info { record.id }
                 if (record !is PaymentOperationResponse) {
-                    break
+                    continue
                 }
                 val transaction = TransactionHistory(
                     from = record.from,
                     to = record.to,
-                    amount = record.amount
+                    amount = record.amount,
+                    date = record.createdAt
                 )
                 transactions.add(transaction)
             }

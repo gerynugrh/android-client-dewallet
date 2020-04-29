@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.ta.dodo.R
 import com.ta.dodo.databinding.HomeFragmentBinding
@@ -24,6 +27,7 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var sendMoneyButton: ImageView
+    private lateinit var transactionHistories: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,13 +44,19 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sendMoneyButton = view.findViewById(R.id.iv_pay_icon)
+        transactionHistories = view.findViewById(R.id.rv_transaction_history)
+
+        transactionHistories.adapter = homeViewModel.transactionsHistoryAdapter
+        transactionHistories.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         sendMoneyButton.setOnClickListener {
             findNavController().navigate(R.id.sendFragment)
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onStart() {
+        super.onStart()
         homeViewModel.refreshBalance()
+        homeViewModel.refreshTransactions()
     }
 }

@@ -33,5 +33,8 @@
         <argument
             android:name="publicKey"
             app:argType="string" />
+        <action
+            android:id="@+id/action_setAmountFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>
