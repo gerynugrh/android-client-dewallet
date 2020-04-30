@@ -33,6 +33,8 @@ class HomeViewModel : ViewModel() {
     private var transactions = ArrayList<TransactionHistory>()
     var transactionsHistoryAdapter = TransactionsHistoryAdapter(transactions, wallet.getAccountId())
 
+    val historyTransactionState = MutableLiveData(HistoryTransactionState.IDLE)
+
     init {
         getUserData()
     }
@@ -46,32 +48,53 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun refreshTransactions() = viewModelScope.launch(Dispatchers.Main) {
+    private fun refreshTransactions() = viewModelScope.launch(Dispatchers.Main) {
         val accountId = wallet.getAccountId()
-        transactions = walletRepositories.getTransactions(accountId)
-        transactionsHistoryAdapter.addAll(transactions)
+        historyTransactionState.value = HistoryTransactionState.START
+        try {
+            transactions = walletRepositories.getTransactions(accountId)
+            transactionsHistoryAdapter.addAll(transactions)
+
+            historyTransactionState.value = HistoryTransactionState.FINISHED
+        } catch (ex: Exception) {
+            historyTransactionState.value = HistoryTransactionState.ERROR
+        }
     }
 
-    fun refreshBalance() = viewModelScope.launch(Dispatchers.Main) {
+    private fun refreshBalance() = viewModelScope.launch(Dispatchers.Main) {
         isRefreshingWallet.value = true
         val localeID = Locale("in", "ID")
         val numberFormat = NumberFormat.getCurrencyInstance(localeID)
 
-        var balance: Double? = null
+        val balance: Double?
 
         try {
-            balance = wallet.getBalance().toDouble() * 1000
+            balance = wallet.getBalance().toDouble() * 100
+            this@HomeViewModel.balance.value = numberFormat.format((balance))
         } catch (ex: Exception) {
             logger.error { ex.message }
         }
 
-        this@HomeViewModel.balance.value = numberFormat.format((balance))
         isRefreshingWallet.value = false
+    }
+
+    fun refreshScreen() = viewModelScope.launch(Dispatchers.Main) {
+        refreshBalance()
+        refreshTransactions()
     }
 
     fun navigateToVerificationActivity(view: View) {
         val context = view.context
         val intent = Intent(context, VerificationActivity::class.java)
         startActivity(context, intent, null)
+    }
+}
+
+class HistoryTransactionState {
+    companion object {
+        const val IDLE = 0
+        const val START = 1
+        const val FINISHED = 2
+        const val ERROR = 3
     }
 }

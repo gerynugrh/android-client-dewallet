@@ -29,7 +29,7 @@ class SetAmountViewModel : ViewModel(), NumberKeyboardListener {
 
         val publicKey = publicKey.value!!
         try {
-            wallet.sendMoney(publicKey, mAmount.toString())
+            wallet.sendMoney(publicKey, (mAmount / 100).toString())
         } catch (ex: Exception) {
             logger.error { ex.message }
         }
