@@ -65,7 +65,7 @@
                         android:layout_marginRight="12dp"
                         android:background="@drawable/rounded_button_pressed"
                         android:elevation="4dp"
-                        android:onClick="@{(v) -> viewModel.navigateToVerificationActivity(v)}"
+                        android:onClick="@{() -> viewModel.navigateToVerificationActivity()}"
                         android:paddingHorizontal="24dp"
                         android:paddingVertical="12dp"
                         android:visibility="@{viewModel.isDataInitialized ? View.GONE : View.VISIBLE}">

@@ -20,9 +20,12 @@ class IdentityViewModel : ViewModel() {
     val email = MutableLiveData<String>()
     val phoneNumber = MutableLiveData<String>()
 
+    val isGoingBackToHome = MutableLiveData(false)
+
     private val userRepositories = UserRepositories()
 
     fun submitIdentity() = viewModelScope.launch(Dispatchers.Main) {
+        logger.info { "Check 1" }
         val pair = wallet.getKeyPair()
 
         logger.info { "Using ${wallet.username} wallet" }
@@ -34,6 +37,9 @@ class IdentityViewModel : ViewModel() {
             .addFullName(fullName.value!!)
             .build()
 
+        logger.info { "Check 2" }
+
         userRepositories.updateUserData(user, pair.second)
+        isGoingBackToHome.value = true
     }
 }

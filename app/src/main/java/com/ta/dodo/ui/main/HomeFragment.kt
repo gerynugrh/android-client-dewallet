@@ -1,5 +1,6 @@
 package com.ta.dodo.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,8 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.ta.dodo.MainActivity
 
 import com.ta.dodo.R
+import com.ta.dodo.VerificationActivity
 import com.ta.dodo.databinding.HomeFragmentBinding
 
 class HomeFragment : Fragment() {
@@ -55,6 +58,8 @@ class HomeFragment : Fragment() {
         sendMoneyButton.setOnClickListener {
             findNavController().navigate(R.id.sendFragment)
         }
+
+        setNavigateToVerification()
         setTransactionHistoryState(noTransaction, transactionProgressBar)
     }
 
@@ -72,6 +77,15 @@ class HomeFragment : Fragment() {
                 HistoryTransactionState.START -> {
                     progressBar.visibility = View.VISIBLE
                 }
+            }
+        })
+    }
+
+    private fun setNavigateToVerification() {
+        homeViewModel.isClickingVerification.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                val intent = Intent(requireContext(), VerificationActivity::class.java)
+                startActivity(intent)
             }
         })
     }

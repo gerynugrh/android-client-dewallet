@@ -44,7 +44,7 @@ class UserRepositories() {
         logger.info { auth }
         val dataJson = gson.toJson(user.data)
         val encryptedData = CipherUtil.encrypt(dataJson, publicKey)!!
-        val request = UpdateUserDataRequest(encryptedData)
+        val request = UpdateUserDataRequest(user.username, encryptedData)
 
         userService.updateUserData(request, auth)
     }

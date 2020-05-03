@@ -29,6 +29,7 @@ class HomeViewModel : ViewModel() {
     val balance = MutableLiveData("")
     val isRefreshingWallet = MutableLiveData(false)
     val isDataInitialized = MutableLiveData(true)
+    val isClickingVerification = MutableLiveData(false)
 
     private var transactions = ArrayList<TransactionHistory>()
     var transactionsHistoryAdapter = TransactionsHistoryAdapter(transactions, wallet.getAccountId())
@@ -83,10 +84,8 @@ class HomeViewModel : ViewModel() {
         refreshTransactions()
     }
 
-    fun navigateToVerificationActivity(view: View) {
-        val context = view.context
-        val intent = Intent(context, VerificationActivity::class.java)
-        startActivity(context, intent, null)
+    fun navigateToVerificationActivity() {
+        isClickingVerification.value = true
     }
 }
 
