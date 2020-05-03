@@ -9,7 +9,7 @@ open class BaseRequest(
     val fcn: String
 ) {
     @SerializedName("peers")
-    val peers = listOf("peer0.org1.example.com", "peer0.org2.example.com")
+    val peers = listOf("peer0.org1.example.com")
     @SerializedName("args")
     var args: List<String> = ArrayList()
 }

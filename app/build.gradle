@@ -89,4 +89,6 @@ dependencies {
 
     implementation "br.com.simplepass:loading-button-android:2.2.0"
     implementation "org.threeten:threetenbp:1.4.4"
+
+    implementation "com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3"
 }

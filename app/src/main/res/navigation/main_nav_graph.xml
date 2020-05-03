@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_homeFragment_to_sendFragment"
             app:destination="@id/sendFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
     </fragment>
     <fragment
         android:id="@+id/setAmountFragment"
@@ -37,4 +40,9 @@
             android:id="@+id/action_setAmountFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="com.ta.dodo.ui.main.scan.ScanFragment"
+        android:label="scan_fragment"
+        tools:layout="@layout/scan_fragment" />
 </navigation>
