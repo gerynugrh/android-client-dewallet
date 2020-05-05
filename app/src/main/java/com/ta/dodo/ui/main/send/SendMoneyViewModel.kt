@@ -3,6 +3,7 @@ package com.ta.dodo.ui.main.send
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,10 +13,12 @@ private val logger = KotlinLogging.logger {}
 
 class SendMoneyViewModel : ViewModel() {
     private val userRepositories = UserRepositories()
+    val wallet = Wallet.getInstance()
     val query = MutableLiveData("")
 
     var username: String = ""
     var publicKey: String = ""
+    var identifier: String = ""
 
     val searchPublicKeyState = MutableLiveData(SearchPublicKey.IDLE)
 
@@ -25,7 +28,10 @@ class SendMoneyViewModel : ViewModel() {
         searchPublicKeyState.value = SearchPublicKey.START
 
         username = query.value!!
-        publicKey = userRepositories.getPublicKey(username)
+        val user = userRepositories.getUserData(username, wallet.username)
+
+        publicKey = user.publicKey
+        identifier = user.data?.fullName ?: user.username
 
         searchPublicKeyState.value = SearchPublicKey.FINISHED
     }

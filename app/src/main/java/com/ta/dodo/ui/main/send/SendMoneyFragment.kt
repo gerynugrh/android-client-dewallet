@@ -54,7 +54,7 @@ class SendMoneyFragment : Fragment() {
 
     private fun navigateToSetAmount() {
         val action = SendMoneyFragmentDirections.actionSendFragmentToSetAmountFragment(
-            username = sendMoneyViewModel.username,
+            username = sendMoneyViewModel.identifier,
             publicKey = sendMoneyViewModel.publicKey
         )
         findNavController().navigate(action)

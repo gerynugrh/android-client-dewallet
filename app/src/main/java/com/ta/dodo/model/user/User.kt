@@ -6,7 +6,7 @@ import javax.crypto.SecretKey
 
 class User(val username: String, val publicKey: String, val ePublicKey: PublicKey) {
 
-    lateinit var data: Data
+    var data: Data? = null
 
     data class Data(
         @SerializedName("phoneNumber")
