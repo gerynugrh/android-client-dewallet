@@ -1,7 +1,7 @@
 package com.ta.dodo.model.wallet
 
 import android.content.Context
-import com.ta.dodo.model.user.KeyGenerator
+import com.ta.dodo.model.user.KeyUtil
 import com.ta.dodo.repository.WalletRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -92,14 +92,14 @@ class Wallet(val username: String) {
         val alias = getAccountId()
         val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
 
-        KeyGenerator.build(alias, seed)
+        KeyUtil.build(alias, seed)
     }
 
     suspend fun getKeyPair(): Pair<PrivateKey, PublicKey> {
         val alias = getAccountId()
         val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
 
-        val keyGenerator = KeyGenerator.build(alias, seed)
+        val keyGenerator = KeyUtil.build(alias, seed)
         return Pair(keyGenerator.getPrivateKey()!!, keyGenerator.getPublicKey()!!)
     }
 

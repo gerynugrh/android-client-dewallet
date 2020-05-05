@@ -8,19 +8,21 @@ import mu.KotlinLogging
 import java.math.BigInteger
 import java.security.*
 import java.util.*
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import javax.security.auth.x500.X500Principal
 
 
 private val logger = KotlinLogging.logger {}
 
-class KeyGenerator private constructor() {
+class KeyUtil private constructor() {
     lateinit var keyStore: KeyStore
     lateinit var alias: String
     lateinit var seed: ByteArray
 
     companion object {
-        suspend fun build(alias: String, seed: ByteArray): KeyGenerator {
-            val keyGenerator = KeyGenerator()
+        suspend fun build(alias: String, seed: ByteArray): KeyUtil {
+            val keyGenerator = KeyUtil()
             keyGenerator.alias = alias
             keyGenerator.seed = seed
 
@@ -52,9 +54,9 @@ class KeyGenerator private constructor() {
 
         val randomValue = SecureRandom(seed)
 
-        val keySpec =
+        val keyGenerator =
             KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore")
-        keySpec.initialize(
+        keyGenerator.initialize(
             KeyGenParameterSpec.Builder(
                 alias, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT
             )
@@ -67,8 +69,23 @@ class KeyGenerator private constructor() {
                 .build(), randomValue)
         logger.info { "KeySpec initialized" }
 
-        keySpec.genKeyPair()
+        keyGenerator.genKeyPair()
         logger.info { "Keypair generated" }
+    }
+
+    fun generateSecretKey() {
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+        val keyGenParameterSpec =  KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT)
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .build()
+
+        keyGenerator.init(keyGenParameterSpec)
+        keyGenerator.generateKey()
+    }
+
+    fun getSecretKey(): SecretKey? {
+        return keyStore.getKey(alias, null) as SecretKey
     }
 
     fun getPrivateKey(): PrivateKey? {
