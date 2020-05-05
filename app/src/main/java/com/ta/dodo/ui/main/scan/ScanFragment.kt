@@ -20,10 +20,9 @@ private val logger = KotlinLogging.logger {}
 class ScanFragment : Fragment() {
 
     companion object {
+        private const val REQUEST_CAMERA = 1
         fun newInstance() = ScanFragment()
     }
-
-    private val REQUEST_CAMERA = 1
 
     private val scanViewModel: ScanViewModel by lazy {
         ViewModelProvider(this).get(ScanViewModel::class.java)
