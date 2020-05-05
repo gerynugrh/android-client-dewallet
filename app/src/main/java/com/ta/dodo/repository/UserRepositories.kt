@@ -4,18 +4,16 @@ import com.google.gson.Gson
 import com.ta.dodo.model.user.CipherUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.service.RetrofitClient
-import com.ta.dodo.service.user.request.RegisterUserRequest
 import com.ta.dodo.service.user.UserService
-import com.ta.dodo.service.user.request.GetPublicKeyRequest
-import com.ta.dodo.service.user.request.GetUserDataRequest
-import com.ta.dodo.service.user.request.UpdateUserDataRequest
+import com.ta.dodo.service.user.request.*
 import com.ta.dodo.service.user.response.BaseResponse
 import com.ta.dodo.service.user.response.GetUserDataResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
+import java.security.Key
 import java.security.PrivateKey
-import java.security.PublicKey
+import javax.crypto.SecretKey
 
 private val logger = KotlinLogging.logger {}
 
@@ -37,16 +35,31 @@ class UserRepositories() {
         return@withContext mToken
     }
 
-    suspend fun updateUserData(user: User, publicKey: PublicKey) = withContext(Dispatchers.IO) {
+    suspend fun updateUserData(user: User, key: SecretKey) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 
         logger.info { auth }
         val dataJson = gson.toJson(user.data)
-        val encryptedData = CipherUtil.encrypt(dataJson, publicKey)!!
+        val encryptedData = CipherUtil.encrypt(dataJson, key, CipherUtil.AES)
         val request = UpdateUserDataRequest(user.username, encryptedData)
 
         userService.updateUserData(request, auth)
+    }
+
+    suspend fun addKey(user: User, owner: String, key: Key) = withContext(Dispatchers.IO) {
+        val token = getToken()
+        val auth = "Bearer $token"
+
+        logger.info { auth }
+        val ePublicKeyString = getEncryptionPublicKey(owner)
+        val ePublicKey = CipherUtil.decodePublicKey(ePublicKeyString)
+
+        val keyString = CipherUtil.encode(key.encoded)
+        val encryptedKey = CipherUtil.encrypt(keyString, ePublicKey, CipherUtil.RSA)
+
+        val request = AddKeyRequest(user.username, owner, encryptedKey)
+        userService.addKey(request, auth)
     }
 
     suspend fun getOwnData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
@@ -61,7 +74,7 @@ class UserRepositories() {
             throw DataNotInitializedException(username)
         }
 
-        val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey)
+        val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey, CipherUtil.RSA)
         logger.info { decrypted }
     }
 
@@ -73,6 +86,19 @@ class UserRepositories() {
         try {
             val data = userService.getPublicKey(request, auth)
             return@withContext data.data!!.publicKey
+        } catch (ex: Exception) {
+            throw UsernameNotFoundException(username)
+        }
+    }
+
+    suspend fun getEncryptionPublicKey(username: String) = withContext(Dispatchers.IO) {
+        val token = getToken()
+        val auth = "Bearer $token"
+
+        val request = GetPublicKeyRequest(username)
+        try {
+            val data = userService.getPublicKey(request, auth)
+            return@withContext data.data!!.ePublicKey
         } catch (ex: Exception) {
             throw UsernameNotFoundException(username)
         }

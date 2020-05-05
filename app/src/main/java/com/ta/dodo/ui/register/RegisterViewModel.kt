@@ -40,10 +40,9 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         logger.info { "Finished generating key" }
 
         wallet.generateKeyPair()
-        val ePublicKey = CipherUtil.encode(wallet.getKeyPair().second.encoded)!!
         val publicKey = wallet.getAccountId()
 
-        val user = User(wallet.username, publicKey, ePublicKey)
+        val user = User(wallet.username, publicKey, wallet.getKeyPair().second)
 
         userRepositories.create(user)
         Wallet.setInstance(wallet)

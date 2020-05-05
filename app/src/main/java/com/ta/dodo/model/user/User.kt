@@ -1,9 +1,10 @@
 package com.ta.dodo.model.user
 
-import com.ta.dodo.model.wallet.Wallet
 import shadow.com.google.gson.annotations.SerializedName
+import java.security.PublicKey
+import javax.crypto.SecretKey
 
-class User(val username: String, val publicKey: String, val ePublicKey: String) {
+class User(val username: String, val publicKey: String, val ePublicKey: PublicKey) {
 
     lateinit var data: Data
 
@@ -17,6 +18,15 @@ class User(val username: String, val publicKey: String, val ePublicKey: String) 
         @SerializedName("email")
         val email: String?
     )
+
+    suspend fun generateSecretKey() {
+        val keyUtil = KeyUtil.build(username)
+    }
+
+    suspend fun getSecretKey(): SecretKey {
+        val keyGenerator = KeyUtil.build(username)
+        return keyGenerator.getSecretKey()!!
+    }
 
     class DataBuilder {
         private var phoneNumber: String? = null
