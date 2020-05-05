@@ -30,6 +30,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var sendMoneyButton: ImageView
     private lateinit var scanButton: ImageView
+    private lateinit var privacyButton: ImageView
     private lateinit var transactionHistories: RecyclerView
     private lateinit var noTransaction: TextView
     private lateinit var transactionProgressBar: ProgressBar
@@ -50,6 +51,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         sendMoneyButton = view.findViewById(R.id.iv_pay_icon)
         scanButton = view.findViewById(R.id.iv_scan_icon)
+        privacyButton = view.findViewById(R.id.iv_privacy_icon)
         transactionHistories = view.findViewById(R.id.rv_transaction_history)
         noTransaction = view.findViewById(R.id.tv_no_transaction)
         transactionProgressBar = view.findViewById(R.id.pb_transaction_loading)
@@ -63,6 +65,9 @@ class HomeFragment : Fragment() {
         }
         scanButton.setOnClickListener {
             findNavController().navigate(R.id.scanFragment)
+        }
+        privacyButton.setOnClickListener {
+            findNavController().navigate(R.id.privacyFragment)
         }
 
         setNavigateToVerification()

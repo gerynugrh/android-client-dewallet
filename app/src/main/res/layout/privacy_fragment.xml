@@ -48,7 +48,7 @@
             android:layout_weight="1" />
 
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-            android:id="@+id/bt_send_money"
+            android:id="@+id/bt_authorize_user"
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"
             android:onClick="@{() -> viewModel.authorize()}"

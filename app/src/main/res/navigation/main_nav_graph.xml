@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_homeFragment_to_scanFragment"
             app:destination="@id/scanFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_privacyFragment"
+            app:destination="@id/privacyFragment" />
     </fragment>
     <fragment
         android:id="@+id/setAmountFragment"
@@ -45,4 +48,9 @@
         android:name="com.ta.dodo.ui.main.scan.ScanFragment"
         android:label="scan_fragment"
         tools:layout="@layout/scan_fragment" />
+    <fragment
+        android:id="@+id/privacyFragment"
+        android:name="com.ta.dodo.ui.main.privacy.PrivacyFragment"
+        android:label="privacy_fragment"
+        tools:layout="@layout/privacy_fragment" />
 </navigation>
