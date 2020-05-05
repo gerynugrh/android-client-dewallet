@@ -3,6 +3,7 @@ package com.ta.dodo.ui.verification
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ta.dodo.model.user.CipherUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
@@ -29,8 +30,10 @@ class IdentityViewModel : ViewModel() {
         val pair = wallet.getKeyPair()
 
         logger.info { "Using ${wallet.username} wallet" }
+        val ePublicKey = CipherUtil.encode(pair.second.encoded)!!
+        val publicKey = wallet.getAccountId()
 
-        val user = User(wallet.username, wallet)
+        val user = User(wallet.username, publicKey, ePublicKey)
         user.data = User.DataBuilder()
             .addPhoneNumber(phoneNumber.value!!)
             .addEmail(email.value!!)

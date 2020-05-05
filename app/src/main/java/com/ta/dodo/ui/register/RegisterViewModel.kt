@@ -1,17 +1,17 @@
 package com.ta.dodo.ui.register
 
 import android.app.Application
-import android.content.Intent
-import androidx.core.content.ContextCompat.startActivity
+import android.util.Base64.encodeToString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.ta.dodo.MainActivity
+import com.ta.dodo.model.user.CipherUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.*
 import mu.KotlinLogging
+import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
@@ -40,7 +40,10 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         logger.info { "Finished generating key" }
 
         wallet.generateKeyPair()
-        val user = User(wallet.username, wallet)
+        val ePublicKey = CipherUtil.encode(wallet.getKeyPair().second.encoded)!!
+        val publicKey = wallet.getAccountId()
+
+        val user = User(wallet.username, publicKey, ePublicKey)
 
         userRepositories.create(user)
         Wallet.setInstance(wallet)

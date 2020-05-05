@@ -3,10 +3,9 @@ package com.ta.dodo.model.user
 import com.ta.dodo.model.wallet.Wallet
 import shadow.com.google.gson.annotations.SerializedName
 
-class User(val username: String, private val wallet: Wallet) {
+class User(val username: String, val publicKey: String, val ePublicKey: String) {
 
     lateinit var data: Data
-    val publicKey: String = wallet.getAccountId()
 
     data class Data(
         @SerializedName("phoneNumber")

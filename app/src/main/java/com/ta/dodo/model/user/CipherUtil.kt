@@ -12,7 +12,7 @@ private const val transformation = "RSA/ECB/PKCS1Padding"
 class CipherUtil {
     companion object {
         fun decrypt(encryptedBase64: String, privateKey: PrivateKey): String {
-            val encryptedBytes = Base64.decode(encryptedBase64, Base64.DEFAULT)
+            val encryptedBytes = decode(encryptedBase64)
             val cipher = Cipher.getInstance(transformation, provider)
             cipher.init(Cipher.DECRYPT_MODE, privateKey)
 
@@ -24,7 +24,15 @@ class CipherUtil {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey)
 
             val encryptedBytes = cipher.doFinal(data.toByteArray(StandardCharsets.UTF_8))
-            return Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+            return encode(encryptedBytes)
+        }
+
+        fun encode(data: ByteArray): String? {
+            return Base64.encodeToString(data, Base64.DEFAULT)
+        }
+
+        fun decode(data: String): ByteArray {
+            return Base64.decode(data, Base64.DEFAULT)
         }
     }
 }

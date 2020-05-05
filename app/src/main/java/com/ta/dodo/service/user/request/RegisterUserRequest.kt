@@ -14,7 +14,8 @@ class RegisterUserRequest(user: User) : BaseRequest("Register") {
         val request =
             Request(
                 username = user.username,
-                publicKey = user.publicKey
+                publicKey = user.publicKey,
+                ePublicKey = user.ePublicKey
             )
         val gson = Gson()
 
@@ -25,6 +26,8 @@ class RegisterUserRequest(user: User) : BaseRequest("Register") {
         @SerializedName("username")
         val username: String,
         @SerializedName("publicKey")
-        val publicKey: String
+        val publicKey: String,
+        @SerializedName("ePublicKey")
+        val ePublicKey: String
     )
 }
