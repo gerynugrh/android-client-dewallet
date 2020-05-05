@@ -1,10 +1,9 @@
 package com.ta.dodo.service.user.request
 
 import com.google.gson.Gson
-import com.ta.dodo.service.user.request.BaseRequest
 import shadow.com.google.gson.annotations.SerializedName
 
-class AddKeyRequest(username: String, owner: String, key: String) : BaseRequest("AddKey") {
+class InsertKeyRequest(username: String, owner: String, key: String) : BaseRequest("AddKey") {
     init {
         val arg = getArg(username, owner, key)
         args = listOf(arg)

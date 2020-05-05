@@ -19,9 +19,9 @@ interface UserService {
 
     @POST("/channels/mychannel/chaincodes/dewallet")
     suspend fun addKey(
-        @Body body: AddKeyRequest,
+        @Body body: InsertKeyRequest,
         @Header("authorization") auth: String
-    ): BaseResponse<AddKeyResponse>
+    ): BaseResponse<InsertKeyResponse>
 
     @FormUrlEncoded
     @POST("/users")

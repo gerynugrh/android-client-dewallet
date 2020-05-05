@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ta.dodo.model.user.CipherUtil
+import com.ta.dodo.model.user.KeyUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
@@ -30,10 +31,13 @@ class IdentityViewModel : ViewModel() {
         val pair = wallet.getKeyPair()
 
         logger.info { "Using ${wallet.username} wallet" }
-        val ePublicKey = CipherUtil.encode(pair.second.encoded)!!
         val publicKey = wallet.getAccountId()
 
-        val user = User(wallet.username, publicKey, ePublicKey)
+        val keyUtil = KeyUtil.build(wallet.username)
+        keyUtil.generateSecretKey()
+        val key = keyUtil.getSecretKey()!!
+
+        val user = User(wallet.username, publicKey, pair.second)
         user.data = User.DataBuilder()
             .addPhoneNumber(phoneNumber.value!!)
             .addEmail(email.value!!)
@@ -42,7 +46,7 @@ class IdentityViewModel : ViewModel() {
 
         logger.info { "Check 2" }
 
-        userRepositories.updateUserData(user, pair.second)
+        userRepositories.updateUserData(user, key)
         isGoingBackToHome.value = true
     }
 }

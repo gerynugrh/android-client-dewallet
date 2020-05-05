@@ -4,18 +4,18 @@ import com.google.gson.Gson
 import com.ta.dodo.model.user.User
 import shadow.com.google.gson.annotations.SerializedName
 
-class RegisterUserRequest(user: User) : BaseRequest("Register") {
+class RegisterUserRequest(username: String, publicKey: String, ePublicKey: String) : BaseRequest("Register") {
     init {
-        val arg = getArg(user)
+        val arg = getArg(username, publicKey, ePublicKey)
         args = listOf(arg)
     }
 
-    private fun getArg(user: User) : String {
+    private fun getArg(username: String, publicKey: String, ePublicKey: String) : String {
         val request =
             Request(
-                username = user.username,
-                publicKey = user.publicKey,
-                ePublicKey = user.ePublicKey
+                username = username,
+                publicKey = publicKey,
+                ePublicKey = ePublicKey
             )
         val gson = Gson()
 

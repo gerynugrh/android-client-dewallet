@@ -1,6 +1,6 @@
 package com.ta.dodo.service.user.response
 
-class AddKeyResponse {
+class InsertKeyResponse {
     lateinit var owner: String
     lateinit var key: String
 }

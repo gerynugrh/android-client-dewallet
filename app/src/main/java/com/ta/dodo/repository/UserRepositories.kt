@@ -45,6 +45,7 @@ class UserRepositories() {
         val request = UpdateUserDataRequest(user.username, encryptedData)
 
         userService.updateUserData(request, auth)
+        addKey(user, user.username, key)
     }
 
     suspend fun addKey(user: User, owner: String, key: Key) = withContext(Dispatchers.IO) {
@@ -58,7 +59,7 @@ class UserRepositories() {
         val keyString = CipherUtil.encode(key.encoded)
         val encryptedKey = CipherUtil.encrypt(keyString, ePublicKey, CipherUtil.RSA)
 
-        val request = AddKeyRequest(user.username, owner, encryptedKey)
+        val request = InsertKeyRequest(user.username, owner, encryptedKey)
         userService.addKey(request, auth)
     }
 
@@ -145,7 +146,11 @@ class UserRepositories() {
         val token = getToken()
         val auth = "Bearer $token"
 
-        val request = RegisterUserRequest(user)
+        val username = user.username
+        val publicKey = user.publicKey
+        val ePublicKeyText = CipherUtil.encode(user.ePublicKey.encoded)
+
+        val request = RegisterUserRequest(username, publicKey, ePublicKeyText)
         logger.info { auth }
         try {
             userService.register(request, auth)
