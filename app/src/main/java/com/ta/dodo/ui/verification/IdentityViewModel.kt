@@ -27,25 +27,29 @@ class IdentityViewModel : ViewModel() {
     private val userRepositories = UserRepositories()
 
     fun submitIdentity() = viewModelScope.launch(Dispatchers.Main) {
-        logger.info { "Check 1" }
-        val pair = wallet.getKeyPair()
+        try {
+            logger.info { "Check 1" }
+            val pair = wallet.getKeyPair()
 
-        logger.info { "Using ${wallet.username} wallet" }
-        val publicKey = wallet.getAccountId()
+            logger.info { "Using ${wallet.username} wallet" }
+            val publicKey = wallet.getAccountId()
 
-        val keyUtil = KeyUtil.instance
-        val key = keyUtil.secretKey
+            val keyUtil = KeyUtil.instance
+            val key = keyUtil.secretKey
 
-        val user = User(wallet.username, publicKey, pair.second)
-        user.data = User.DataBuilder()
-            .addPhoneNumber(phoneNumber.value!!)
-            .addEmail(email.value!!)
-            .addFullName(fullName.value!!)
-            .build()
+            val user = User(wallet.username, publicKey, pair.second)
+            user.data = User.DataBuilder()
+                .addPhoneNumber(phoneNumber.value!!)
+                .addEmail(email.value!!)
+                .addFullName(fullName.value!!)
+                .build()
 
-        logger.info { "Check 2" }
+            logger.info { "Check 2" }
 
-        userRepositories.updateUserData(user, key)
-        isGoingBackToHome.value = true
+            userRepositories.updateUserData(user, key)
+            isGoingBackToHome.value = true
+        } catch (ex: Exception) {
+            logger.error { ex.printStackTrace() }
+        }
     }
 }

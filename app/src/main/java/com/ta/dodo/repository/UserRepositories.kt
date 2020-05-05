@@ -41,7 +41,7 @@ class UserRepositories() {
 
         logger.info { auth }
         val dataJson = gson.toJson(user.data)
-        val encryptedData = CipherUtil.encrypt(dataJson, key, CipherUtil.AES)
+        val encryptedData = CipherUtil.encryptWithoutProvider(dataJson, key, CipherUtil.AES)
         val request = UpdateUserDataRequest(user.username, encryptedData)
 
         userService.updateUserData(request, auth)
@@ -61,13 +61,13 @@ class UserRepositories() {
             val keyString = CipherUtil.encode(key.encoded)
             logger.info { "Encode secret key $keyString" }
 
-            val encryptedKey = CipherUtil.encrypt(keyString, ePublicKey, CipherUtil.RSA)
+            val encryptedKey = CipherUtil.encryptWithoutProvider(keyString, ePublicKey, CipherUtil.RSA)
             logger.info { "Succesfully encrypting symetric key" }
 
             val request = InsertKeyRequest(user.username, owner, encryptedKey)
             userService.addKey(request, auth)
         } catch (ex: Exception) {
-            logger.error { ex.message }
+            logger.error { ex.printStackTrace() }
         }
     }
 
@@ -83,7 +83,7 @@ class UserRepositories() {
             throw DataNotInitializedException(username)
         }
 
-        val decrypted = CipherUtil.decrypt(data.data!!.data, privateKey, CipherUtil.RSA)
+        val decrypted = CipherUtil.decryptWithoutProvider(data.data!!.data, privateKey, CipherUtil.RSA)
         logger.info { decrypted }
     }
 
@@ -110,10 +110,10 @@ class UserRepositories() {
         }
 
         try {
-            val decryptedKeyText = CipherUtil.decrypt(encryptedKey, ePublicKey, CipherUtil.RSA)
+            val decryptedKeyText = CipherUtil.decryptWithoutProvider(encryptedKey, ePublicKey, CipherUtil.RSA)
             val decryptedKey = CipherUtil.decodeSecretKey(decryptedKeyText)
 
-            val decryptedData = CipherUtil.decrypt(encryptedData, decryptedKey, CipherUtil.AES)
+            val decryptedData = CipherUtil.decryptWithoutProvider(encryptedData, decryptedKey, CipherUtil.AES)
             val data = gson.fromJson(decryptedData, User.Data::class.java)
 
             user.data = data

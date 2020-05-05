@@ -43,7 +43,7 @@ class KeyUtil private constructor() {
         val secret = reader.readLine()
         secretKey = CipherUtil.decodeSecretKey(secret)
 
-        logger.info { "secret $secret" }
+        logger.info { "secret ${CipherUtil.encode(secretKey.encoded)}" }
     }
 
     private suspend fun save(secretKey: String, context: Context) = withContext(Dispatchers.IO) {
