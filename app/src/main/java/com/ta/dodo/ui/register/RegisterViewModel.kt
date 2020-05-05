@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.ta.dodo.model.user.CipherUtil
+import com.ta.dodo.model.user.KeyUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
@@ -26,6 +27,10 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     fun loadSavedPrivateKey() {
         val wallet = Wallet.load(context)
+        viewModelScope.launch(Dispatchers.Main) {
+            val keyUtil = KeyUtil.build(wallet.username, context)
+            KeyUtil.instance = keyUtil
+        }
         Wallet.setInstance(wallet)
     }
 
@@ -43,6 +48,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         val publicKey = wallet.getAccountId()
 
         val user = User(wallet.username, publicKey, wallet.getKeyPair().second)
+        user.generateSecretKey(context)
 
         userRepositories.create(user)
         Wallet.setInstance(wallet)

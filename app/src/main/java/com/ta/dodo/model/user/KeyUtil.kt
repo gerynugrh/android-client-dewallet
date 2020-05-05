@@ -7,15 +7,19 @@ import com.ta.dodo.model.wallet.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
+import java.io.FileNotFoundException
 import java.security.KeyStore
+import java.security.SecureRandom
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
-private val logger = KotlinLogging.logger {  }
+private val logger = KotlinLogging.logger { }
 
 class KeyUtil private constructor() {
     lateinit var alias: String
     lateinit var secretKey: SecretKey
+    val rng: SecureRandom = SecureRandom()
+    private val size = 256
     private val secretFileName = "secret.pk"
 
     companion object {
@@ -24,9 +28,13 @@ class KeyUtil private constructor() {
         suspend fun build(alias: String, context: Context): KeyUtil {
             val keyGenerator = KeyUtil()
             keyGenerator.alias = alias
-            keyGenerator.load(context)
-
-            return keyGenerator
+            try {
+                keyGenerator.load(context)
+            } catch (ex: FileNotFoundException) {
+                logger.info { ex.message }
+            } finally {
+                return keyGenerator
+            }
         }
     }
 
@@ -34,6 +42,8 @@ class KeyUtil private constructor() {
         val reader = context.openFileInput(secretFileName).bufferedReader()
         val secret = reader.readLine()
         secretKey = CipherUtil.decodeSecretKey(secret)
+
+        logger.info { "secret $secret" }
     }
 
     private suspend fun save(secretKey: String, context: Context) = withContext(Dispatchers.IO) {
@@ -44,16 +54,10 @@ class KeyUtil private constructor() {
     }
 
     suspend fun generateSecretKey(context: Context) = withContext(Dispatchers.IO) {
-        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES)
-        val keyGenParameterSpec =  KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT)
-            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-            .build()
+        val key = ByteArray(size)
+        rng.nextBytes(key)
 
-        keyGenerator.init(keyGenParameterSpec)
-        val secretKey = keyGenerator.generateKey()
-        val secretKeyText = CipherUtil.encode(secretKey.encoded)
-
+        val secretKeyText = CipherUtil.encode(key)
         save(secretKeyText, context)
     }
 }

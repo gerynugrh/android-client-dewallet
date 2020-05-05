@@ -26,8 +26,6 @@ class PrivacyViewModel(application: Application) : AndroidViewModel(application)
 
         val username = query.value!!
         val user = User(wallet.username, wallet.getAccountId(), wallet.getKeyPair().second)
-
-        user.generateSecretKey(context)
         userRepositories.addKey(user, username, user.getSecretKey())
 
         authorizeUserState.value = AuthorizeUserState.FINISHED

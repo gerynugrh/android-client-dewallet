@@ -52,6 +52,8 @@ class RegisterFragment : Fragment() {
             startActivity(intent)
         } catch (ex: FileNotFoundException) {
             logger.info { "No saved private key detected" }
+        } catch (ex: UninitializedPropertyAccessException) {
+            logger.info { "Secret key hasn't been initialized" }
         }
     }
 

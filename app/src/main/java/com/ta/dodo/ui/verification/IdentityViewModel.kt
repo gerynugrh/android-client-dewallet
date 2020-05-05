@@ -33,9 +33,8 @@ class IdentityViewModel : ViewModel() {
         logger.info { "Using ${wallet.username} wallet" }
         val publicKey = wallet.getAccountId()
 
-        val keyUtil = KeyUtil.build(wallet.username)
-        keyUtil.generateSecretKey()
-        val key = keyUtil.getSecretKey()!!
+        val keyUtil = KeyUtil.instance
+        val key = keyUtil.secretKey
 
         val user = User(wallet.username, publicKey, pair.second)
         user.data = User.DataBuilder()
