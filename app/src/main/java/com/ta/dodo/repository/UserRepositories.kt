@@ -78,6 +78,43 @@ class UserRepositories() {
         logger.info { decrypted }
     }
 
+    suspend fun getUserData(username: String, owner: String) = withContext(Dispatchers.IO) {
+        val token = getToken()
+        val auth = "Bearer $token"
+
+        val request = GetUserDataRequest(username, owner)
+        val response: BaseResponse<GetUserDataResponse>
+
+        response = userService.getUserData(request, auth)
+        val ePublicKeyString = response.data!!.ePublicKey
+        val ePublicKey = CipherUtil.decodePublicKey(ePublicKeyString)
+        val encryptedKey = response.data!!.key
+        val encryptedData = response.data!!.data
+
+        val user = User(
+            username = username,
+            publicKey = response.data!!.publicKey,
+            ePublicKey = ePublicKey
+        )
+        if (encryptedData == "" || encryptedKey == "") {
+            return@withContext user
+        }
+
+        try {
+            val decryptedKeyText = CipherUtil.decrypt(encryptedKey, ePublicKey, CipherUtil.RSA)
+            val decryptedKey = CipherUtil.decodeSecretKey(decryptedKeyText)
+
+            val decryptedData = CipherUtil.decrypt(encryptedData, decryptedKey, CipherUtil.AES)
+            val data = gson.fromJson(decryptedData, User.Data::class.java)
+
+            user.data = data
+
+            return@withContext user
+        } catch (ex: Exception) {
+            return@withContext user
+        }
+    }
+
     suspend fun getPublicKey(username: String) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
