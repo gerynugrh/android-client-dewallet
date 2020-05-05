@@ -87,7 +87,7 @@ class UserRepositories() {
         logger.info { decrypted }
     }
 
-    suspend fun getUserData(username: String, owner: String) = withContext(Dispatchers.IO) {
+    suspend fun getUserData(username: String, owner: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 
@@ -110,8 +110,11 @@ class UserRepositories() {
         }
 
         try {
-            val decryptedKeyText = CipherUtil.decryptWithoutProvider(encryptedKey, ePublicKey, CipherUtil.RSA)
-            val decryptedKey = CipherUtil.decodeSecretKey(decryptedKeyText)
+            val decryptedKeyText = CipherUtil.decryptWithoutProvider(encryptedKey, privateKey, CipherUtil.RSA)
+            val decodedKeyText = CipherUtil.decode(decryptedKeyText)
+            val decryptedKey = CipherUtil.decodeSecretKey(decodedKeyText)
+
+            logger.info { "Decrypted key ${CipherUtil.encode(decryptedKey.encoded)}" }
 
             val decryptedData = CipherUtil.decryptWithoutProvider(encryptedData, decryptedKey, CipherUtil.AES)
             val data = gson.fromJson(decryptedData, User.Data::class.java)
@@ -120,6 +123,7 @@ class UserRepositories() {
 
             return@withContext user
         } catch (ex: Exception) {
+            logger.error { ex.printStackTrace() }
             return@withContext user
         }
     }

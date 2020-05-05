@@ -28,7 +28,7 @@ class SendMoneyViewModel : ViewModel() {
         searchPublicKeyState.value = SearchPublicKey.START
 
         username = query.value!!
-        val user = userRepositories.getUserData(username, wallet.username)
+        val user = userRepositories.getUserData(username, wallet.username, wallet.getKeyPair().first)
 
         publicKey = user.publicKey
         identifier = user.data?.fullName ?: user.username

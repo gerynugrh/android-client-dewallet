@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton
 import com.ta.dodo.R
 
@@ -20,6 +21,7 @@ class PrivacyFragment : Fragment() {
     }
 
     private lateinit var authorizeUserButton: CircularProgressButton
+    private val args: PrivacyFragmentArgs by navArgs()
 
     private val privacyViewModel: PrivacyViewModel by lazy {
         ViewModelProvider(this).get(PrivacyViewModel::class.java)
@@ -39,6 +41,7 @@ class PrivacyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         authorizeUserButton = view.findViewById(R.id.bt_authorize_user)
+        privacyViewModel.greeting.value = "Halo ${args.identifier},"
 
         setAuthorizeButtonState(authorizeUserButton)
     }

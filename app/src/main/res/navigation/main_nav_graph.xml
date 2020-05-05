@@ -52,5 +52,9 @@
         android:id="@+id/privacyFragment"
         android:name="com.ta.dodo.ui.main.privacy.PrivacyFragment"
         android:label="privacy_fragment"
-        tools:layout="@layout/privacy_fragment" />
+        tools:layout="@layout/privacy_fragment" >
+        <argument
+            android:name="identifier"
+            app:argType="string" />
+    </fragment>
 </navigation>

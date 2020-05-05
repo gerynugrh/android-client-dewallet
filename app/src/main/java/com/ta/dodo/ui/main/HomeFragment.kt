@@ -67,7 +67,10 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.scanFragment)
         }
         privacyButton.setOnClickListener {
-            findNavController().navigate(R.id.privacyFragment)
+            val action = HomeFragmentDirections.actionHomeFragmentToPrivacyFragment(
+                identifier = homeViewModel.identifier.value!!
+            )
+            findNavController().navigate(action)
         }
 
         setNavigateToVerification()

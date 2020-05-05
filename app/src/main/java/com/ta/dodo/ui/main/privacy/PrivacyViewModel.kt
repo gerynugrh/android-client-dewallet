@@ -18,6 +18,7 @@ class PrivacyViewModel(application: Application) : AndroidViewModel(application)
 
     private val userRepositories = UserRepositories()
     val authorizeUserState = MutableLiveData(AuthorizeUserState.IDLE)
+    val greeting = MutableLiveData("Halo ${wallet.username},")
 
     val query = MutableLiveData("")
 

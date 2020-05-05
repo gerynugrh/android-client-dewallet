@@ -36,6 +36,8 @@ class HomeViewModel : ViewModel() {
 
     val historyTransactionState = MutableLiveData(HistoryTransactionState.IDLE)
 
+    val identifier = MutableLiveData(wallet.username)
+
     init {
         getUserData()
     }
@@ -43,7 +45,15 @@ class HomeViewModel : ViewModel() {
     private fun getUserData() = viewModelScope.launch(Dispatchers.Main) {
         try {
             val pair = wallet.getKeyPair()
-            userRepositories.getOwnData(wallet.username, pair.first)
+            val user = userRepositories.getUserData(wallet.username, wallet.username, pair.first)
+
+            logger.info { user.data }
+
+            if (user.data == null) {
+                throw UserRepositories.DataNotInitializedException(wallet.username)
+            }
+
+            identifier.value = user.data?.fullName
         } catch (ex: UserRepositories.DataNotInitializedException) {
             isDataInitialized.value = false
         }

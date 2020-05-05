@@ -1,16 +1,11 @@
 package com.ta.dodo.model.user
 
 import android.content.Context
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import com.ta.dodo.model.wallet.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 import java.io.FileNotFoundException
-import java.security.KeyStore
 import java.security.SecureRandom
-import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
 private val logger = KotlinLogging.logger { }
@@ -41,14 +36,15 @@ class KeyUtil private constructor() {
     suspend fun load(context: Context) = withContext(Dispatchers.IO) {
         val reader = context.openFileInput(secretFileName).bufferedReader()
         val secret = reader.readLine()
-        secretKey = CipherUtil.decodeSecretKey(secret)
+        secretKey = CipherUtil.generateSecretKeyFromSecret(secret)
 
         logger.info { "secret ${CipherUtil.encode(secretKey.encoded)}" }
     }
 
-    private suspend fun save(secretKey: String, context: Context) = withContext(Dispatchers.IO) {
+    private suspend fun save(secret: String, context: Context) = withContext(Dispatchers.IO) {
+        secretKey = CipherUtil.generateSecretKeyFromSecret(secret)
         context.openFileOutput(secretFileName, Context.MODE_PRIVATE).use {
-            it.write(secretKey.toByteArray())
+            it.write(secret.toByteArray())
             it.write("\n".toByteArray())
         }
     }

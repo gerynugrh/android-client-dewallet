@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="8dp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="Kirim ke pengguna lain" />
+            android:text="@{viewModel.greeting}" />
 
         <EditText
             android:layout_marginTop="8dp"
@@ -39,7 +39,7 @@
             android:inputType="text"
             android:background="@drawable/search_useranme_background"
             android:autofillHints="username"
-            android:hint="Username penerima"
+            android:hint="Username yang ingin kamu otorisasi"
             android:text="@={viewModel.query}" />
 
         <View
@@ -52,7 +52,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="match_parent"
             android:onClick="@{() -> viewModel.authorize()}"
-            android:text="@string/send"
+            android:text="@string/authorize"
             app:spinning_bar_color="@android:color/white"
             android:textColor="@android:color/white"
             android:backgroundTint="@color/colorSecondary"
