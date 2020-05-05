@@ -1,5 +1,6 @@
 package com.ta.dodo.model.user
 
+import android.content.Context
 import shadow.com.google.gson.annotations.SerializedName
 import java.security.PublicKey
 import javax.crypto.SecretKey
@@ -19,13 +20,15 @@ class User(val username: String, val publicKey: String, val ePublicKey: PublicKe
         val email: String?
     )
 
-    suspend fun generateSecretKey() {
-        val keyUtil = KeyUtil.build(username)
+    suspend fun generateSecretKey(context: Context) {
+        val keyUtil = KeyUtil.build(username, context)
+        keyUtil.generateSecretKey(context)
+        KeyUtil.instance = keyUtil
     }
 
-    suspend fun getSecretKey(): SecretKey {
-        val keyGenerator = KeyUtil.build(username)
-        return keyGenerator.getSecretKey()!!
+    fun getSecretKey(): SecretKey {
+        val keyGenerator = KeyUtil.instance
+        return keyGenerator.secretKey
     }
 
     class DataBuilder {

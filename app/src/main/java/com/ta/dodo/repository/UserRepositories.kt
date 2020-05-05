@@ -55,12 +55,20 @@ class UserRepositories() {
         logger.info { auth }
         val ePublicKeyString = getEncryptionPublicKey(owner)
         val ePublicKey = CipherUtil.decodePublicKey(ePublicKeyString)
+        logger.info { "Succesfully decoded public key" }
 
-        val keyString = CipherUtil.encode(key.encoded)
-        val encryptedKey = CipherUtil.encrypt(keyString, ePublicKey, CipherUtil.RSA)
+        try {
+            val keyString = CipherUtil.encode(key.encoded)
+            logger.info { "Encode secret key $keyString" }
 
-        val request = InsertKeyRequest(user.username, owner, encryptedKey)
-        userService.addKey(request, auth)
+            val encryptedKey = CipherUtil.encrypt(keyString, ePublicKey, CipherUtil.RSA)
+            logger.info { "Succesfully encrypting symetric key" }
+
+            val request = InsertKeyRequest(user.username, owner, encryptedKey)
+            userService.addKey(request, auth)
+        } catch (ex: Exception) {
+            logger.error { ex.message }
+        }
     }
 
     suspend fun getOwnData(username: String, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
@@ -132,6 +140,8 @@ class UserRepositories() {
     suspend fun getEncryptionPublicKey(username: String) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
+
+        logger.info { "Querying $username" }
 
         val request = GetPublicKeyRequest(username)
         try {

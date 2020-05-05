@@ -1,7 +1,9 @@
 package com.ta.dodo.model.user
 
+import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.ta.dodo.model.wallet.Wallet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging
@@ -12,42 +14,46 @@ import javax.crypto.SecretKey
 private val logger = KotlinLogging.logger {  }
 
 class KeyUtil private constructor() {
-    lateinit var keyStore: KeyStore
     lateinit var alias: String
+    lateinit var secretKey: SecretKey
+    private val secretFileName = "secret.pk"
 
     companion object {
-        suspend fun build(alias: String): KeyUtil {
+        lateinit var instance: KeyUtil
+
+        suspend fun build(alias: String, context: Context): KeyUtil {
             val keyGenerator = KeyUtil()
             keyGenerator.alias = alias
-            keyGenerator.load()
+            keyGenerator.load(context)
 
             return keyGenerator
         }
     }
 
-    suspend fun load() {
-        withContext(Dispatchers.IO) {
-            keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
-        }
-        if (!keyStore.containsAlias(alias)) {
-            logger.info { "Generating keypair" }
-            generateSecretKey()
+    suspend fun load(context: Context) = withContext(Dispatchers.IO) {
+        val reader = context.openFileInput(secretFileName).bufferedReader()
+        val secret = reader.readLine()
+        secretKey = CipherUtil.decodeSecretKey(secret)
+    }
+
+    private suspend fun save(secretKey: String, context: Context) = withContext(Dispatchers.IO) {
+        context.openFileOutput(secretFileName, Context.MODE_PRIVATE).use {
+            it.write(secretKey.toByteArray())
+            it.write("\n".toByteArray())
         }
     }
 
-    fun generateSecretKey() {
-        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+    suspend fun generateSecretKey(context: Context) = withContext(Dispatchers.IO) {
+        val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES)
         val keyGenParameterSpec =  KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_DECRYPT or KeyProperties.PURPOSE_ENCRYPT)
             .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
             .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
             .build()
 
         keyGenerator.init(keyGenParameterSpec)
-        keyGenerator.generateKey()
-    }
+        val secretKey = keyGenerator.generateKey()
+        val secretKeyText = CipherUtil.encode(secretKey.encoded)
 
-    fun getSecretKey(): SecretKey? {
-        return keyStore.getKey(alias, null) as SecretKey
+        save(secretKeyText, context)
     }
 }

@@ -1,5 +1,8 @@
 package com.ta.dodo.ui.main.privacy
 
+import android.app.Application
+import android.content.Context
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +12,8 @@ import com.ta.dodo.repository.UserRepositories
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PrivacyViewModel : ViewModel() {
+class PrivacyViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = getApplication<Application>().applicationContext
     private val wallet = Wallet.getInstance()
 
     private val userRepositories = UserRepositories()
@@ -23,7 +27,7 @@ class PrivacyViewModel : ViewModel() {
         val username = query.value!!
         val user = User(wallet.username, wallet.getAccountId(), wallet.getKeyPair().second)
 
-        user.generateSecretKey()
+        user.generateSecretKey(context)
         userRepositories.addKey(user, username, user.getSecretKey())
 
         authorizeUserState.value = AuthorizeUserState.FINISHED
