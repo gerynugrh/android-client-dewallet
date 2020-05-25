@@ -116,6 +116,7 @@ class UserRepositories() {
 
             logger.info { "Decrypted key ${CipherUtil.encode(decryptedKey.encoded)}" }
 
+            logger.info { "Data $encryptedData" }
             val decryptedData = CipherUtil.decryptWithoutProvider(encryptedData, decryptedKey, CipherUtil.AES)
             val data = gson.fromJson(decryptedData, User.Data::class.java)
 
