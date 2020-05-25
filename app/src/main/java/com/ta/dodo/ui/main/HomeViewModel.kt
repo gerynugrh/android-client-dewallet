@@ -80,7 +80,7 @@ class HomeViewModel : ViewModel() {
         val balance: Double?
 
         try {
-            balance = wallet.getBalance().toDouble() * 100
+            balance = wallet.getBalance().toDouble()
             this@HomeViewModel.balance.value = numberFormat.format((balance))
         } catch (ex: Exception) {
             logger.error { ex.message }

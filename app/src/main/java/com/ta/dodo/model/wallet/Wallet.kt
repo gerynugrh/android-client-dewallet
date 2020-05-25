@@ -107,7 +107,7 @@ class Wallet(val username: String) {
         return keyPair.accountId
     }
 
-    private fun getSeed(): String {
+    fun getSeed(): String {
         return String(keyPair.secretSeed)
     }
 }

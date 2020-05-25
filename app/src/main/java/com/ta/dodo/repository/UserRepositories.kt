@@ -8,6 +8,8 @@ import com.ta.dodo.service.user.UserService
 import com.ta.dodo.service.user.request.*
 import com.ta.dodo.service.user.response.BaseResponse
 import com.ta.dodo.service.user.response.GetUserDataResponse
+import com.ta.dodo.service.wallet.CreateWallet
+import com.ta.dodo.service.wallet.WalletService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import mu.KotlinLogging

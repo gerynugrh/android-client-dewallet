@@ -71,8 +71,8 @@ class TransactionsHistoryAdapter(
         private fun formatAmount(amount: Int, isReceiver: Boolean): String {
             val numberFormat = DecimalFormat()
             return when (isReceiver) {
-                true -> "Rp${numberFormat.format(amount * 100)}"
-                false -> "-Rp${numberFormat.format(amount * 100)}"
+                true -> "Rp${numberFormat.format(amount)}"
+                false -> "-Rp${numberFormat.format(amount)}"
             }
         }
 
