@@ -44,10 +44,11 @@ class WalletRepositories {
 
         logger.info { "Success building sender account" }
 
-        val operation = PaymentOperation.Builder(receiver, AssetTypeNative(), amount).build()
+        val asset = Asset.createNonNativeAsset(asset, issuer)
+        val operation = PaymentOperation.Builder(receiver, asset, amount).build()
         val transaction = Transaction.Builder(sourceAccount, network)
             .addOperation(operation)
-            .setTimeout(180)
+            .setTimeout(30)
             .build()
 
         logger.info { "Success buildling transaction" }
