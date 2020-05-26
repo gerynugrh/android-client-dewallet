@@ -47,7 +47,11 @@
         android:id="@+id/scanFragment"
         android:name="com.ta.dodo.ui.main.scan.ScanFragment"
         android:label="scan_fragment"
-        tools:layout="@layout/scan_fragment" />
+        tools:layout="@layout/scan_fragment" >
+        <action
+            android:id="@+id/action_scanFragment_to_paymentFragment"
+            app:destination="@id/paymentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/privacyFragment"
         android:name="com.ta.dodo.ui.main.privacy.PrivacyFragment"
@@ -56,5 +60,17 @@
         <argument
             android:name="identifier"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/paymentFragment"
+        android:name="com.ta.dodo.ui.main.scan.PaymentFragment"
+        android:label="payment_fragment"
+        tools:layout="@layout/payment_fragment" >
+        <argument
+            android:name="payment"
+            app:argType="com.ta.dodo.model.wallet.Payment" />
+        <action
+            android:id="@+id/action_paymentFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

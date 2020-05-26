@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView
 import com.ta.dodo.R
 import com.ta.dodo.databinding.ScanFragmentBinding
+import com.ta.dodo.model.wallet.Payment
 import mu.KotlinLogging
 
 
@@ -51,6 +54,26 @@ class ScanFragment : Fragment() {
         requestCameraPermission()
     }
 
+    override fun onStart() {
+        super.onStart()
+        setOnPaymentReadListener()
+    }
+
+    private fun setOnPaymentReadListener() {
+        scanViewModel.payment.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                navigateToPayment(it)
+            }
+        })
+    }
+
+    private fun navigateToPayment(payment: Payment) {
+        val action = ScanFragmentDirections.actionScanFragmentToPaymentFragment(
+            payment = payment
+        )
+        findNavController().navigate(action)
+    }
+
     private fun requestCameraPermission() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -61,6 +84,7 @@ class ScanFragment : Fragment() {
         } else {
             qrCodeReader.setBackCamera()
             logger.info { "Permission granted" }
+            qrCodeReader.visibility = View.VISIBLE
         }
     }
 
@@ -73,6 +97,7 @@ class ScanFragment : Fragment() {
         if (requestCode == REQUEST_CAMERA) {
             qrCodeReader.setBackCamera()
             logger.info { "Permission granted" }
+            qrCodeReader.visibility = View.VISIBLE
         }
     }
 }
