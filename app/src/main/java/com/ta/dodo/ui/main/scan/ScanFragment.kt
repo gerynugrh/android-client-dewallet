@@ -61,6 +61,7 @@ class ScanFragment : Fragment() {
 
     private fun setOnPaymentReadListener() {
         scanViewModel.payment.observe(viewLifecycleOwner, Observer {
+            logger.info { it }
             if (it != null) {
                 navigateToPayment(it)
             }

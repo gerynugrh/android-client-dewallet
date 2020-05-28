@@ -76,7 +76,7 @@
             android:backgroundTint="@color/colorSecondary"
             android:paddingVertical="12dp"
             android:onClick="@{() -> viewModel.pay}"
-            android:text="Konfirmasi"
+            android:text="Bayar"
             android:textColor="@android:color/white"
             app:spinning_bar_padding="6dp"
             app:initialCornerAngle="0dp" />

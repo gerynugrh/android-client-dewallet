@@ -61,9 +61,7 @@ class PaymentFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        paymentViewModel.apply {
-            payment = args.payment
-        }
+        paymentViewModel.initializePayment(args.payment)
         setPaymentStateListener()
     }
 }

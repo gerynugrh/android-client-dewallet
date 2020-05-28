@@ -6,7 +6,8 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Payment (
     val publicKey: String,
-    val username: String,
+    val name: String,
     val orderId: Int,
-    val price: Int
+    val total: Int,
+    val webhook: String
 ) : Parcelable

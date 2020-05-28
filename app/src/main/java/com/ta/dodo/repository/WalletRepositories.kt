@@ -25,7 +25,7 @@ class WalletRepositories {
     private val httpClient = OkHttpClient()
     private val walletService: WalletService = RetrofitClient.walletService
 
-    suspend fun sendMoney(seed: String, receiver: String, amount: String) = withContext(Dispatchers.IO) {
+    suspend fun sendMoney(seed: String, receiver: String, amount: String, memo: MemoText? = null) = withContext(Dispatchers.IO) {
         try {
             server.accounts().account(receiver)
         } catch (ex: Exception) {
@@ -46,18 +46,25 @@ class WalletRepositories {
 
         val asset = Asset.createNonNativeAsset(asset, issuer)
         val operation = PaymentOperation.Builder(receiver, asset, amount).build()
-        val transaction = Transaction.Builder(sourceAccount, network)
+        val transactionBuilder = Transaction.Builder(sourceAccount, network)
             .addOperation(operation)
             .setTimeout(30)
-            .build()
+
+        if (memo !== null) {
+            transactionBuilder.addMemo(memo)
+        }
+
+        val transaction = transactionBuilder.build()
 
         logger.info { "Success buildling transaction" }
 
         transaction.sign(source)
         try {
-            server.submitTransaction(transaction)
+            val response = server.submitTransaction(transaction)
+            return@withContext response.hash
         } catch (ex: SubmitTransactionUnknownResponseException) {
                 logger.error { "Code ${ex.code} Message: ${ex.body}" }
+            return@withContext null
         }
     }
 
