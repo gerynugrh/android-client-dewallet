@@ -45,8 +45,10 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
         wallet.generateKeyPair()
         val publicKey = wallet.getAccountId()
+        val encryptionKey = wallet.getEncryptionKeyPair()
+        val signingKey = wallet.getSigningKeyPair()
 
-        val user = User(wallet.username, publicKey, wallet.getKeyPair().second)
+        val user = User(wallet.username, publicKey, encryptionKey.second, signingKey.second)
         user.generateSecretKey(context)
 
         userRepositories.create(user)

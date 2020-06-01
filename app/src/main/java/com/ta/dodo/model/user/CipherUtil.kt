@@ -1,20 +1,21 @@
 package com.ta.dodo.model.user
 
+import android.R.attr
 import android.util.Base64
+import com.ta.dodo.toHexString
 import mu.KotlinLogging
+import java.lang.StringBuilder
 import java.nio.charset.StandardCharsets
-import java.security.Key
-import java.security.KeyFactory
-import java.security.PublicKey
-import java.security.SecureRandom
+import java.security.*
 import java.security.spec.X509EncodedKeySpec
-import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.experimental.and
+
 
 private const val provider = "AndroidKeyStoreBCWorkaround"
 private val logger = KotlinLogging.logger { }
@@ -111,6 +112,28 @@ class CipherUtil {
 
             val keyFactory = KeyFactory.getInstance("RSA")
             return keyFactory.generatePublic(keySpec)
+        }
+
+        fun hash(data: String): String {
+            var digest: MessageDigest? = null
+            return try {
+                digest = MessageDigest.getInstance("SHA-256")
+                digest.reset()
+                val bytes = digest.digest(data.toByteArray())
+                bytes.toHexString()
+            } catch (e1: NoSuchAlgorithmException) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace()
+                ""
+            }
+        }
+
+        fun sign(data: String, privateKey: PrivateKey): String {
+            val signer = Signature.getInstance("SHA256WithRSA")
+            signer.initSign(privateKey)
+            signer.update(data.toByteArray())
+
+            return signer.sign().toHexString()
         }
     }
 }

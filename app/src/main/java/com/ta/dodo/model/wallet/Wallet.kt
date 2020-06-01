@@ -95,12 +95,20 @@ class Wallet(val username: String) {
         KeyPairUtil.build(alias, seed)
     }
 
-    suspend fun getKeyPair(): Pair<PrivateKey, PublicKey> {
+    suspend fun getEncryptionKeyPair(): Pair<PrivateKey, PublicKey> {
         val alias = getAccountId()
         val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
 
         val keyGenerator = KeyPairUtil.build(alias, seed)
-        return Pair(keyGenerator.getPrivateKey()!!, keyGenerator.getPublicKey()!!)
+        return keyGenerator.getEncryptionKey()
+    }
+
+    suspend fun getSigningKeyPair(): Pair<PrivateKey, PublicKey> {
+        val alias = getAccountId()
+        val seed = getSeed().toByteArray(StandardCharsets.UTF_8)
+
+        val keyGenerator = KeyPairUtil.build(alias, seed)
+        return keyGenerator.getSigningKey()
     }
 
     fun getAccountId(): String {

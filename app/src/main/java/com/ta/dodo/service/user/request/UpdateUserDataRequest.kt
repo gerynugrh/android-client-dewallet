@@ -3,7 +3,7 @@ package com.ta.dodo.service.user.request
 import com.google.gson.Gson
 import shadow.com.google.gson.annotations.SerializedName
 
-class UpdateUserDataRequest(username: String, data: String) : BaseRequest("UpdateUserData") {
+class UpdateUserDataRequest(username: String, data: String) : PermissionedRequest("UpdateUserData") {
     init {
         val arg = getArg(username, data)
         args = listOf(arg)

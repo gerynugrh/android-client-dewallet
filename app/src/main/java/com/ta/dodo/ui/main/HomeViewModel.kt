@@ -1,19 +1,14 @@
 package com.ta.dodo.ui.main
 
-import android.content.Intent
-import android.view.View
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ta.dodo.VerificationActivity
 import com.ta.dodo.model.wallet.TransactionHistory
 import com.ta.dodo.model.wallet.Wallet
 import com.ta.dodo.repository.UserRepositories
 import com.ta.dodo.repository.WalletRepositories
 import com.ta.dodo.ui.main.adapter.TransactionsHistoryAdapter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import java.text.NumberFormat
@@ -44,7 +39,7 @@ class HomeViewModel : ViewModel() {
 
     private fun getUserData() = viewModelScope.launch(Dispatchers.Main) {
         try {
-            val pair = wallet.getKeyPair()
+            val pair = wallet.getEncryptionKeyPair()
             val user = userRepositories.getUserData(wallet.username, wallet.username, pair.first)
 
             logger.info { user.data }

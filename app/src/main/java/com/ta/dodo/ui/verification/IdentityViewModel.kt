@@ -3,7 +3,6 @@ package com.ta.dodo.ui.verification
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ta.dodo.model.user.CipherUtil
 import com.ta.dodo.model.user.KeyUtil
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
@@ -29,7 +28,8 @@ class IdentityViewModel : ViewModel() {
     fun submitIdentity() = viewModelScope.launch(Dispatchers.Main) {
         try {
             logger.info { "Check 1" }
-            val pair = wallet.getKeyPair()
+            val pair = wallet.getEncryptionKeyPair()
+            val signingPair = wallet.getSigningKeyPair()
 
             logger.info { "Using ${wallet.username} wallet" }
             val publicKey = wallet.getAccountId()
@@ -46,7 +46,7 @@ class IdentityViewModel : ViewModel() {
 
             logger.info { "Check 2" }
 
-            userRepositories.updateUserData(user, key)
+            userRepositories.updateUserData(user, key, signingPair.first)
             isGoingBackToHome.value = true
         } catch (ex: Exception) {
             logger.error { ex.printStackTrace() }

@@ -1,10 +1,8 @@
 package com.ta.dodo.ui.main.privacy
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ta.dodo.model.user.User
 import com.ta.dodo.model.wallet.Wallet
@@ -24,10 +22,12 @@ class PrivacyViewModel(application: Application) : AndroidViewModel(application)
 
     fun authorize() = viewModelScope.launch(Dispatchers.Main) {
         authorizeUserState.value = AuthorizeUserState.START
+        val pair = wallet.getEncryptionKeyPair()
+        val signingPair = wallet.getSigningKeyPair()
 
         val username = query.value!!
-        val user = User(wallet.username, wallet.getAccountId(), wallet.getKeyPair().second)
-        userRepositories.addKey(user, username, user.getSecretKey())
+        val user = User(wallet.username, wallet.getAccountId(), pair.second)
+        userRepositories.addKey(user, username, user.getSecretKey(), signingPair.first)
 
         authorizeUserState.value = AuthorizeUserState.FINISHED
     }

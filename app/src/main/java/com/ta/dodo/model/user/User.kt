@@ -5,7 +5,7 @@ import shadow.com.google.gson.annotations.SerializedName
 import java.security.PublicKey
 import javax.crypto.SecretKey
 
-class User(val username: String, val publicKey: String, val ePublicKey: PublicKey) {
+class User(val username: String, val publicKey: String, val ePublicKey: PublicKey, val sPublicKey: PublicKey? = null) {
 
     var data: Data? = null
 

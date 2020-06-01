@@ -37,7 +37,7 @@ class UserRepositories() {
         return@withContext mToken
     }
 
-    suspend fun updateUserData(user: User, key: SecretKey) = withContext(Dispatchers.IO) {
+    suspend fun updateUserData(user: User, key: SecretKey, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 
@@ -45,12 +45,15 @@ class UserRepositories() {
         val dataJson = gson.toJson(user.data)
         val encryptedData = CipherUtil.encryptWithoutProvider(dataJson, key, CipherUtil.AES)
         val request = UpdateUserDataRequest(user.username, encryptedData)
+        request.addSignature(privateKey)
+
+        logger.info { "Request ${request.args}"}
 
         userService.updateUserData(request, auth)
-        addKey(user, user.username, key)
+        addKey(user, user.username, key, privateKey)
     }
 
-    suspend fun addKey(user: User, owner: String, key: Key) = withContext(Dispatchers.IO) {
+    suspend fun addKey(user: User, owner: String, key: Key, privateKey: PrivateKey) = withContext(Dispatchers.IO) {
         val token = getToken()
         val auth = "Bearer $token"
 
@@ -67,6 +70,10 @@ class UserRepositories() {
             logger.info { "Succesfully encrypting symetric key" }
 
             val request = InsertKeyRequest(user.username, owner, encryptedKey)
+            request.addSignature(privateKey)
+
+            logger.info { "Request ${request.args}"}
+
             userService.addKey(request, auth)
         } catch (ex: Exception) {
             logger.error { ex.printStackTrace() }
@@ -166,8 +173,13 @@ class UserRepositories() {
         val username = user.username
         val publicKey = user.publicKey
         val ePublicKeyText = CipherUtil.encode(user.ePublicKey.encoded)
+        var sPublicKeyText = ""
 
-        val request = RegisterUserRequest(username, publicKey, ePublicKeyText)
+        if (user.sPublicKey != null) {
+            sPublicKeyText = CipherUtil.encode(user.sPublicKey.encoded)
+        }
+
+        val request = RegisterUserRequest(username, publicKey, ePublicKeyText, sPublicKeyText)
         logger.info { auth }
         try {
             userService.register(request, auth)
