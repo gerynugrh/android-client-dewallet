@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.ta.dodo.databinding.RegisterFragmentBinding
 import mu.KotlinLogging
 import com.ta.dodo.MainActivity
@@ -27,13 +28,13 @@ class RegisterFragment : Fragment() {
         fun newInstance() = RegisterFragment()
     }
 
+    private val args: RegisterFragmentArgs by navArgs()
+
     private val registerViewModel: RegisterViewModel by lazy {
         ViewModelProvider(this).get(RegisterViewModel::class.java)
     }
 
     private lateinit var registerButton: Button
-    private lateinit var continueButton: Button
-    private lateinit var privateKeyTooltip: EditText
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -45,10 +46,7 @@ class RegisterFragment : Fragment() {
         registerViewModel.registerState.observe(viewLifecycleOwner, Observer {
             when(it) {
                 RegisterState.RECOVER -> navigateToRecoverAccount()
-                RegisterState.FINISH -> {
-                    val intent = Intent(requireContext(), MainActivity::class.java)
-                    startActivity(intent)
-                }
+                RegisterState.GENERATED -> navigateToSecretView()
             }
         })
 
@@ -59,16 +57,26 @@ class RegisterFragment : Fragment() {
         findNavController().navigate(R.id.recoverFragment)
     }
 
+    private fun navigateToSecretView() {
+        val action = RegisterFragmentDirections.actionRegisterFragmentToSecretFragment(
+            secret = registerViewModel.secret.value!!
+        )
+        findNavController().navigate(action)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         registerButton = view.findViewById(R.id.btn_register)
-        continueButton = view.findViewById(R.id.btn_continue)
-        privateKeyTooltip = view.findViewById(R.id.et_private_key)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val originAccount = args.originAccount
+        logger.info { "Registering from origin $originAccount" }
+
+        if (originAccount != null && originAccount != ".") {
+            registerViewModel.setOrigin(originAccount)
+        }
         try {
             registerViewModel.loadSavedPrivateKey()
             val intent = Intent(requireContext(), MainActivity::class.java)

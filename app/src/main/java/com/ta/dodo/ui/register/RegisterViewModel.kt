@@ -21,6 +21,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     var wallet: MutableLiveData<Wallet> = MutableLiveData()
     var secret = MutableLiveData("")
+    private var origin: MutableLiveData<String?> = MutableLiveData(null)
     var username = MutableLiveData("")
     var registerState = MutableLiveData(RegisterState.IDLE)
 
@@ -53,6 +54,12 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
         userRepositories.create(user)
         walletRepositories.createWallet(wallet.getSeed())
+
+        val originAddress = origin.value
+        if (originAddress != null) {
+            walletRepositories.mergeWallet(wallet.getAccountId(), originAddress)
+        }
+
         Wallet.setInstance(wallet)
 
         this@RegisterViewModel.wallet.value = wallet
@@ -60,8 +67,11 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         registerState.value = RegisterState.GENERATED
     }
 
-    fun finishWritingSecret() {
-        registerState.value = RegisterState.FINISH
+    fun setOrigin(origin: String) {
+        this.origin.value = origin
+        registerState.value = RegisterState.IDLE_MERGING
+
+        logger.info { "User is registering for a recovered account" }
     }
 
     fun recoverAccount() {
@@ -72,9 +82,10 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 class RegisterState {
     companion object {
         const val IDLE = 0
-        const val GENERATING = 1
-        const val GENERATED = 2
-        const val FINISH = 3
-        const val RECOVER = 4
+        const val IDLE_MERGING = 1
+        const val GENERATING = 2
+        const val GENERATED = 3
+        const val FINISH = 4
+        const val RECOVER = 5
     }
 }

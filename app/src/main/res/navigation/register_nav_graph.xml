@@ -16,7 +16,11 @@
         <argument
             android:name="originAccount"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="." />
+        <action
+            android:id="@+id/action_registerFragment_to_secretFragment"
+            app:destination="@id/secretFragment" />
     </fragment>
     <fragment
         android:id="@+id/recoverFragment"
@@ -26,5 +30,13 @@
         <action
             android:id="@+id/action_recoverFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secretFragment"
+        android:name="com.ta.dodo.ui.register.SecretFragment"
+        android:label="SecretFragment" >
+        <argument
+            android:name="secret"
+            app:argType="string" />
     </fragment>
 </navigation>

@@ -23,8 +23,6 @@ class RecoverFragment : Fragment() {
         ViewModelProvider(this).get(RecoverViewModel::class.java)
     }
 
-    private lateinit var viewModel: RecoverViewModel
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,7 +46,7 @@ class RecoverFragment : Fragment() {
 
     private fun navigateToRegisterWithSource() {
         val action = RecoverFragmentDirections.actionRecoverFragmentToRegisterFragment(
-            originAccount = viewModel.privateKey.value
+            originAccount = recoverViewModel.privateKey.value
         )
         findNavController().navigate(action)
     }

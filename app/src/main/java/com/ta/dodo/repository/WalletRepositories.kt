@@ -82,6 +82,23 @@ class WalletRepositories {
         return@withContext
     }
 
+    suspend fun mergeWallet(destinationAddress: String, originSeed: String) = withContext(Dispatchers.IO) {
+        val sourcePair = KeyPair.fromSecretSeed(originSeed)
+        val account = server.accounts().account(sourcePair.accountId)
+        val balanceIdr = account.balances[0].balance
+
+        sendMoney(originSeed, destinationAddress, balanceIdr)
+        val operation = AccountMergeOperation.Builder(destinationAddress).build()
+        val mergeTransaction = Transaction.Builder(account, network)
+            .addOperation(operation)
+            .setTimeout(30)
+            .build()
+        mergeTransaction.sign(sourcePair)
+        server.submitTransaction(mergeTransaction)
+
+        return@withContext
+    }
+
     suspend fun createWallet(seed: String) = withContext(Dispatchers.IO) {
         val wallet = KeyPair.fromSecretSeed(seed)
         val response = walletService.create(CreateWallet.Request(wallet.accountId))

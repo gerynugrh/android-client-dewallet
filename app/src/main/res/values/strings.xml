@@ -20,4 +20,7 @@
     <string name="accont_not_found_tooltip">Akun tidak ditemukan, silahkan mendaftarkan akun baru</string>
     <string name="register_new_account">Daftar akun baru</string>
     <string name="merge_account">Pindahkan akun</string>
+    <string name="merging_tooltips">Ini akan menghapus akun lamamu dan memindahkan semua saldo ke akun sekarang</string>
+    <string name="secret_tooltip">Catat dan simpan kunci ini baik-baik</string>
+    <string name="go_to_main_page">Lanjut ke Halaman Utama</string>
 </resources>
