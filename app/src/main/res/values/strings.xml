@@ -12,4 +12,12 @@
     <string name="receiver_username">Username penerima</string>
     <string name="send">Kirim</string>
     <string name="authorize">Izinkan</string>
+    <string name="recovery">Ambil alih akun</string>
+    <string name="recover_tooltip">Masukkan kunci akun lama kamu</string>
+    <string name="key">Kunci</string>
+    <string name="next">Lanjut</string>
+    <string name="account_found_tooltips">Akun ditemukan, setelah ini silahkan daftar seperti biasa dan nilai pada akun sebelumnya akan dipindahkan ke akunmu yang baru</string>
+    <string name="accont_not_found_tooltip">Akun tidak ditemukan, silahkan mendaftarkan akun baru</string>
+    <string name="register_new_account">Daftar akun baru</string>
+    <string name="merge_account">Pindahkan akun</string>
 </resources>

@@ -92,6 +92,16 @@ class WalletRepositories {
         }
     }
 
+    suspend fun isAccountExist(seed: String) = withContext(Dispatchers.IO) {
+        val wallet = KeyPair.fromSecretSeed(seed)
+        try {
+            server.accounts().account(wallet.accountId)
+            return@withContext true
+        } catch (ex: java.lang.Exception) {
+            return@withContext false
+        }
+    }
+
     suspend fun getTransactions(accountId: String) = withContext(Dispatchers.IO) {
         val operationBuilder = server.operations().forAccount(accountId)
         val operations = operationBuilder.execute()

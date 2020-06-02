@@ -20,9 +20,9 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     private val walletRepositories = WalletRepositories()
 
     var wallet: MutableLiveData<Wallet> = MutableLiveData()
-    var username: MutableLiveData<String> = MutableLiveData("")
-    var isGeneratingKey: MutableLiveData<Boolean> = MutableLiveData(false)
-    var isRegisterStepComplete: MutableLiveData<Boolean> = MutableLiveData(false)
+    var secret = MutableLiveData("")
+    var username = MutableLiveData("")
+    var registerState = MutableLiveData(RegisterState.IDLE)
 
     fun loadSavedPrivateKey() {
         val wallet = Wallet.load(context)
@@ -34,7 +34,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun register() = viewModelScope.launch(Dispatchers.Main) {
-        isGeneratingKey.value = true
+        registerState.value = RegisterState.GENERATING
         val username = this@RegisterViewModel.username.value!!
         val wallet = Wallet(username)
 
@@ -56,7 +56,25 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         Wallet.setInstance(wallet)
 
         this@RegisterViewModel.wallet.value = wallet
-        isGeneratingKey.value = false
-        isRegisterStepComplete.value = true
+        secret.value = wallet.getSeed()
+        registerState.value = RegisterState.GENERATED
+    }
+
+    fun finishWritingSecret() {
+        registerState.value = RegisterState.FINISH
+    }
+
+    fun recoverAccount() {
+        registerState.value = RegisterState.RECOVER
+    }
+}
+
+class RegisterState {
+    companion object {
+        const val IDLE = 0
+        const val GENERATING = 1
+        const val GENERATED = 2
+        const val FINISH = 3
+        const val RECOVER = 4
     }
 }

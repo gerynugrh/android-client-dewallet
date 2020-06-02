@@ -6,6 +6,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.ta.dodo.ui.register.RegisterState"/>
         <variable
             name="viewModel"
             type="com.ta.dodo.ui.register.RegisterViewModel" />
@@ -78,6 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingVertical="12dp"
+            android:visibility="@{viewModel.registerState &lt; RegisterState.GENERATED ? View.VISIBLE : View.INVISIBLE}"
             android:backgroundTint="@color/colorSecondary"
             android:onClick="@{() -> viewModel.register()}"
             android:text="@string/button_register"
@@ -86,9 +88,51 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_username" />
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingVertical="12dp"
+            android:visibility="@{viewModel.registerState == RegisterState.IDLE ? View.VISIBLE : View.INVISIBLE}"
+            android:backgroundTint="@color/lightPink"
+            android:onClick="@{() -> viewModel.recoverAccount()}"
+            android:text="@string/recovery"
+            android:textColor="@color/lightBlack"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_register" />
+
+        <EditText
+            android:id="@+id/et_private_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="12dp"
+            android:inputType="none"
+            android:text="@{viewModel.secret}"
+            android:visibility="@{viewModel.registerState == RegisterState.GENERATED ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_username" />
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="12dp"
+            android:backgroundTint="@color/colorSecondary"
+            android:onClick="@{() -> viewModel.finishWritingSecret()}"
+            android:visibility="@{viewModel.registerState == RegisterState.GENERATED ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@string/button_register"
+            android:textColor="@android:color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_private_key" />
+
         <ProgressBar
             android:id="@+id/pb_generate_key"
-            android:visibility="@{viewModel.isGeneratingKey ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{viewModel.registerState == RegisterState.GENERATING ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
